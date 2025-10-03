@@ -5,6 +5,7 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>BI Система за Анализ</title>
     <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/xlsx/0.18.5/xlsx.full.min.js"></script>
     <style>
         * {
             margin: 0;
@@ -101,113 +102,31 @@
 
         .header h1 {
             color: #333;
-            text-align: center;
+            margin-bottom: 10px;
         }
 
-        .navigation {
+        .header p {
+            color: #666;
+        }
+
+        .nav-tabs {
+            display: flex;
             background: white;
-            padding: 15px;
             border-radius: 10px;
+            padding: 5px;
             margin-bottom: 20px;
             box-shadow: 0 2px 10px rgba(0, 0, 0, 0.1);
-        }
-
-        .nav-buttons {
-            display: flex;
-            gap: 10px;
-            flex-wrap: wrap;
-            justify-content: center;
-        }
-
-        .nav-btn {
-            padding: 12px 20px;
-            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
-            color: white;
-            border: none;
-            border-radius: 5px;
-            cursor: pointer;
-            font-size: 14px;
-            transition: transform 0.2s;
-        }
-
-        .nav-btn:hover, .nav-btn.active {
-            transform: translateY(-2px);
-            background: linear-gradient(135deg, #764ba2 0%, #667eea 100%);
-        }
-
-        .screen {
-            display: none;
-            background: white;
-            padding: 30px;
-            border-radius: 10px;
-            box-shadow: 0 2px 10px rgba(0, 0, 0, 0.1);
-        }
-
-        .screen.active {
-            display: block;
-        }
-
-        .screen h2 {
-            margin-bottom: 20px;
-            color: #333;
-        }
-
-        /* Market Basket specific styles */
-        .upload-area {
-            border: 2px dashed #ddd;
-            border-radius: 10px;
-            padding: 40px;
-            text-align: center;
-            margin-bottom: 20px;
-            transition: all 0.3s;
-        }
-
-        .upload-area:hover {
-            border-color: #667eea;
-            background: #f8f9ff;
-        }
-
-        .upload-area.dragover {
-            border-color: #667eea;
-            background: #f0f4ff;
-        }
-
-        .file-input {
-            display: none;
-        }
-
-        .upload-btn {
-            padding: 12px 24px;
-            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
-            color: white;
-            border: none;
-            border-radius: 5px;
-            cursor: pointer;
-            font-size: 16px;
-            margin: 10px;
-        }
-
-        .upload-btn:hover {
-            transform: translateY(-2px);
-        }
-
-        .analysis-results {
-            margin-top: 20px;
-        }
-
-        .result-tabs {
-            display: flex;
-            gap: 10px;
-            margin-bottom: 20px;
         }
 
         .tab-btn {
-            padding: 10px 20px;
-            background: #f5f5f5;
+            flex: 1;
+            padding: 12px 20px;
             border: none;
-            border-radius: 5px;
+            background: transparent;
+            border-radius: 8px;
             cursor: pointer;
             transition: all 0.3s;
+            font-weight: 500;
         }
 
         .tab-btn.active {
@@ -217,67 +136,64 @@
 
         .tab-content {
             display: none;
-            padding: 20px;
-            border: 1px solid #ddd;
-            border-radius: 5px;
+            background: white;
+            padding: 30px;
+            border-radius: 10px;
+            box-shadow: 0 2px 10px rgba(0, 0, 0, 0.1);
         }
 
         .tab-content.active {
             display: block;
         }
 
-        .combination-item {
-            padding: 10px;
-            border: 1px solid #eee;
-            border-radius: 5px;
-            margin-bottom: 10px;
-            background: #f9f9f9;
+        .upload-section {
+            text-align: center;
+            margin-bottom: 30px;
         }
 
-        .combination-header {
-            font-weight: bold;
-            color: #333;
-            margin-bottom: 5px;
-        }
-
-        .combination-details {
-            color: #666;
-            font-size: 14px;
-        }
-
-        .progress {
-            width: 100%;
-            height: 6px;
-            background: #f0f0f0;
-            border-radius: 3px;
-            overflow: hidden;
-            margin: 10px 0;
-        }
-
-        .progress-bar {
-            height: 100%;
-            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
-            width: 0%;
-            transition: width 0.3s;
-        }
-
-        .logout-btn {
-            position: fixed;
-            top: 20px;
-            right: 20px;
-            padding: 10px 20px;
-            background: #dc3545;
-            color: white;
-            border: none;
-            border-radius: 5px;
+        .upload-area {
+            border: 3px dashed #ddd;
+            border-radius: 10px;
+            padding: 40px;
+            margin-bottom: 20px;
+            transition: all 0.3s;
             cursor: pointer;
         }
 
-        .status-message {
-            padding: 10px;
+        .upload-area:hover {
+            border-color: #667eea;
+            background: #f8f9ff;
+        }
+
+        .upload-area.dragover {
+            border-color: #667eea;
+            background: #f0f8ff;
+        }
+
+        .file-input {
+            display: none;
+        }
+
+        .upload-btn {
+            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+            color: white;
+            padding: 12px 24px;
+            border: none;
             border-radius: 5px;
-            margin: 10px 0;
-            text-align: center;
+            cursor: pointer;
+            font-size: 16px;
+            transition: transform 0.2s;
+        }
+
+        .upload-btn:hover {
+            transform: translateY(-2px);
+        }
+
+        .status-message {
+            padding: 15px;
+            border-radius: 5px;
+            margin-top: 15px;
+            display: none;
         }
 
         .status-success {
@@ -298,34 +214,41 @@
             border: 1px solid #bee5eb;
         }
 
-        /* Chart specific styles */
-        .chart-container {
-            position: relative;
-            height: 400px;
-            margin: 20px 0;
+        .analysis-section {
+            margin-top: 30px;
+        }
+
+        .module-btn {
+            background: linear-gradient(135deg, #28a745 0%, #20c997 100%);
+            color: white;
+            padding: 15px 30px;
+            border: none;
+            border-radius: 8px;
+            cursor: pointer;
+            font-size: 16px;
+            font-weight: 500;
+            transition: all 0.3s;
+            margin: 10px;
+            min-width: 200px;
+        }
+
+        .module-btn:hover {
+            transform: translateY(-3px);
+            box-shadow: 0 5px 15px rgba(40, 167, 69, 0.4);
+        }
+
+        .module-btn:disabled {
+            background: #6c757d;
+            cursor: not-allowed;
+            transform: none;
+            box-shadow: none;
+        }
+
+        .results-container {
+            margin-top: 30px;
             padding: 20px;
             background: #f8f9fa;
             border-radius: 8px;
-        }
-
-        .chart-title {
-            text-align: center;
-            font-size: 18px;
-            font-weight: bold;
-            margin-bottom: 15px;
-            color: #333;
-        }
-
-        .charts-grid {
-            display: grid;
-            grid-template-columns: 1fr;
-            gap: 20px;
-        }
-
-        @media (min-width: 1200px) {
-            .charts-grid {
-                grid-template-columns: 1fr 1fr;
-            }
         }
 
         .network-container {
@@ -334,6 +257,7 @@
             border-radius: 8px;
             position: relative;
             overflow: hidden;
+            background: #fafafa;
         }
 
         .network-node {
@@ -347,11 +271,16 @@
             cursor: pointer;
             transition: all 0.3s;
             box-shadow: 0 2px 5px rgba(0,0,0,0.2);
+            white-space: nowrap;
+            max-width: 120px;
+            text-overflow: ellipsis;
+            overflow: hidden;
         }
 
         .network-node:hover {
             background: #764ba2;
             transform: scale(1.1);
+            z-index: 10;
         }
 
         .network-line {
@@ -359,6 +288,100 @@
             background: #333;
             transform-origin: left center;
             opacity: 0.3;
+            pointer-events: none;
+        }
+
+        .chart-container {
+            margin: 20px 0;
+            padding: 20px;
+            background: white;
+            border-radius: 8px;
+            box-shadow: 0 2px 5px rgba(0,0,0,0.1);
+        }
+
+        .chart-title {
+            font-size: 18px;
+            font-weight: bold;
+            margin-bottom: 15px;
+            color: #333;
+            text-align: center;
+        }
+
+        .chart-canvas {
+            max-height: 400px;
+        }
+
+        .stats-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));
+            gap: 15px;
+            margin: 20px 0;
+        }
+
+        .stat-card {
+            background: white;
+            padding: 20px;
+            border-radius: 8px;
+            text-align: center;
+            box-shadow: 0 2px 5px rgba(0,0,0,0.1);
+        }
+
+        .stat-number {
+            font-size: 24px;
+            font-weight: bold;
+            color: #667eea;
+        }
+
+        .stat-label {
+            color: #666;
+            margin-top: 5px;
+        }
+
+        .logout-btn {
+            background: #dc3545;
+            color: white;
+            padding: 8px 16px;
+            border: none;
+            border-radius: 5px;
+            cursor: pointer;
+            float: right;
+        }
+
+        .logout-btn:hover {
+            background: #c82333;
+        }
+
+        .refresh-network-btn {
+            background: #17a2b8;
+            color: white;
+            padding: 8px 16px;
+            border: none;
+            border-radius: 5px;
+            cursor: pointer;
+            margin: 10px 0;
+            font-size: 14px;
+        }
+
+        .refresh-network-btn:hover {
+            background: #138496;
+        }
+
+        @media (max-width: 768px) {
+            .container {
+                padding: 10px;
+            }
+
+            .nav-tabs {
+                flex-direction: column;
+            }
+
+            .tab-btn {
+                margin-bottom: 5px;
+            }
+
+            .network-container {
+                height: 400px;
+            }
         }
     </style>
 </head>
@@ -369,8 +392,8 @@
             <h2>🔐 BI Система - Вход</h2>
             <form id="login-form">
                 <div class="form-group">
-                    <label for="email">Email:</label>
-                    <input type="email" id="email" name="email" required>
+                    <label for="username">Потребителско име:</label>
+                    <input type="text" id="username" name="username" required>
                 </div>
                 <div class="form-group">
                     <label for="password">Парола:</label>
@@ -383,493 +406,496 @@
 
     <!-- Main Application -->
     <div id="main-app" class="main-app">
-        <button class="logout-btn" onclick="logout()">Изход</button>
-        
         <div class="container">
+            <!-- Header -->
             <div class="header">
-                <h1>🔍 BI Система за Анализ</h1>
+                <button class="logout-btn" onclick="logout()">Излизане</button>
+                <h1>📊 BI Система за Анализ на Данни</h1>
+                <p>Добре дошли в усъвършенствания инструмент за бизнес анализ с пълна XLSX поддръжка</p>
             </div>
 
-            <div class="navigation">
-                <div class="nav-buttons">
-                    <button class="nav-btn" onclick="showScreen('dashboard')">📊 Табло</button>
-                    <button class="nav-btn" onclick="showScreen('market-basket')">🛒 Пазарна Кошница</button>
-                    <button class="nav-btn" onclick="showScreen('reports')">📈 Отчети</button>
-                    <button class="nav-btn" onclick="showScreen('settings')">⚙️ Настройки</button>
+            <!-- Navigation Tabs -->
+            <div class="nav-tabs">
+                <button class="tab-btn active" onclick="showTab('upload')">📁 Качване на данни</button>
+                <button class="tab-btn" onclick="showTab('analysis')">🔍 Анализ</button>
+                <button class="tab-btn" onclick="showTab('basket')">🛒 Пазарна Кошница</button>
+                <button class="tab-btn" onclick="showTab('visualization')">📊 Визуализация</button>
+            </div>
+
+            <!-- Upload Tab -->
+            <div id="upload-tab" class="tab-content active">
+                <h2>Качване на файлове с данни</h2>
+                <div class="upload-section">
+                    <div class="upload-area" id="upload-area">
+                        <h3>📂 Избиране на файл</h3>
+                        <p>Преместете XLSX или CSV файл тук или натиснете бутона</p>
+                        <input type="file" id="file-input" class="file-input" accept=".xlsx,.csv">
+                        <button class="upload-btn" onclick="document.getElementById('file-input').click()">
+                            Избиране на файл
+                        </button>
+                    </div>
+                    <div id="file-status" class="status-message"></div>
                 </div>
             </div>
 
-            <!-- Dashboard Screen -->
-            <div id="dashboard-screen" class="screen active">
-                <h2>📊 Главно Табло</h2>
-                <p>Добре дошли в BI системата за анализ на данни!</p>
-                <p>Използвайте навигацията горе, за да достъпите различните модули.</p>
+            <!-- Analysis Tab -->
+            <div id="analysis-tab" class="tab-content">
+                <h2>Статистически анализ</h2>
+                <p>Тук ще се покажат резултати от анализа на данните</p>
+                <div id="analysis-results"></div>
             </div>
 
-            <!-- Market Basket Screen -->
-            <div id="market-basket-screen" class="screen">
+            <!-- Market Basket Tab -->
+            <div id="basket-tab" class="tab-content">
                 <h2>🛒 Анализ на Пазарната Кошница</h2>
+                <p>Открийте скрити връзки между продуктите и оптимизирайте своята стратегия!</p>
                 
-                <div class="upload-area" id="upload-area">
-                    <h3>📤 Качване на данни</h3>
-                    <p>Преместете XLSX или CSV файл тук или натиснете бутона</p>
-                    <input type="file" id="file-input" class="file-input" accept=".xlsx,.csv">
-                    <button class="upload-btn" onclick="document.getElementById('file-input').click()">
-                        Избери файл
+                <div class="analysis-section">
+                    <button id="market-basket-btn" class="module-btn" onclick="runMarketBasketAnalysis()" disabled>
+                        🔍 Стартиране на Market Basket Analysis
                     </button>
-                    <p style="margin-top: 10px; color: #666; font-size: 14px;">
-                        Файлът трябва да съдържа минимум колони: <strong>Дата, Продукт</strong><br>
-                        Опционални: ID/Бон (за групиране на транзакции), Клиент, Количество<br>
-                        <em>Колоните се разпознават автоматично по име</em>
-                    </p>
                 </div>
-
-                <div id="file-status" class="status-message" style="display: none;"></div>
                 
-                <div class="progress" id="progress-container" style="display: none;">
-                    <div class="progress-bar" id="progress-bar"></div>
+                <div id="basket-results" class="results-container" style="display: none;">
+                    <h3>📈 Резултати от анализа</h3>
+                    <div id="basket-stats"></div>
+                    <div id="basket-combinations"></div>
                 </div>
+            </div>
 
-                <div id="analysis-results" class="analysis-results" style="display: none;">
-                    <h3>📊 Резултати от анализа</h3>
-                    
-                    <div class="result-tabs">
-                        <button class="tab-btn active" onclick="showTab('combinations')">🔗 Комбинации</button>
-                        <button class="tab-btn" onclick="showTab('statistics')">📈 Статистики</button>
-                        <button class="tab-btn" onclick="showTab('visualization')">📊 Визуализация</button>
+            <!-- Visualization Tab -->
+            <div id="visualization-tab" class="tab-content">
+                <h2>📊 Визуализация на резултатите</h2>
+                <p>Графично представяне на анализа от Пазарната Кошница</p>
+                
+                <div id="charts-container" style="display: none;">
+                    <!-- Bar Chart -->
+                    <div class="chart-container">
+                        <div class="chart-title">📊 Топ Комбинации (Bar Chart)</div>
+                        <canvas id="barChart" class="chart-canvas"></canvas>
                     </div>
 
-                    <div id="combinations-tab" class="tab-content active">
-                        <h4>Най-чести комбинации от продукти:</h4>
-                        <div id="combinations-list"></div>
+                    <!-- Pie Chart -->
+                    <div class="chart-container">
+                        <div class="chart-title">🥧 Разпределение на Комбинациите (Pie Chart)</div>
+                        <canvas id="pieChart" class="chart-canvas"></canvas>
                     </div>
 
-                    <div id="statistics-tab" class="tab-content">
-                        <h4>Статистически данни:</h4>
-                        <div id="statistics-content"></div>
-                    </div>
-
-                    <div id="visualization-tab" class="tab-content">
-                        <h4>Графична визуализация:</h4>
-                        
-                        <div class="charts-grid">
-                            <!-- Bar Chart for Top Combinations -->
-                            <div class="chart-container">
-                                <div class="chart-title">📊 Топ Комбинации</div>
-                                <canvas id="combinationsChart"></canvas>
-                            </div>
-
-                            <!-- Pie Chart for Product Distribution -->
-                            <div class="chart-container">
-                                <div class="chart-title">🥧 Разпределение на Продукти</div>
-                                <canvas id="productsChart"></canvas>
-                            </div>
-                        </div>
-
-                        <!-- Network Diagram -->
-                        <div class="chart-container">
-                            <div class="chart-title">🕸️ Мрежова Диаграма на Връзки</div>
-                            <div id="networkDiagram" class="network-container">
-                                <div style="text-align: center; padding-top: 200px; color: #666;">
-                                    Мрежовата диаграма ще се покаже след анализ...
-                                </div>
+                    <!-- Network Diagram -->
+                    <div class="chart-container">
+                        <div class="chart-title">🕸️ Мрежова Диаграма на Връзки</div>
+                        <button class="refresh-network-btn" onclick="refreshNetworkDiagram()">🔄 Презареди диаграмата</button>
+                        <div id="networkDiagram" class="network-container">
+                            <div style="text-align: center; padding-top: 200px; color: #666;">
+                                Мрежовата диаграма ще се покаже след анализ...
                             </div>
                         </div>
                     </div>
                 </div>
-            </div>
 
-            <!-- Reports Screen -->
-            <div id="reports-screen" class="screen">
-                <h2>📈 Отчети</h2>
-                <p>Модулът за отчети ще бъде добавен скоро.</p>
-            </div>
-
-            <!-- Settings Screen -->
-            <div id="settings-screen" class="screen">
-                <h2>⚙️ Настройки</h2>
-                <p>Модулът за настройки ще бъде добавен скоро.</p>
+                <div id="no-visualization" style="text-align: center; padding: 50px; color: #666;">
+                    Първо изпълнете анализ на Пазарната Кошница за да видите графиките
+                </div>
             </div>
         </div>
     </div>
 
     <script>
-        // Login functionality
-        document.getElementById('login-form').addEventListener('submit', function(e) {
-            e.preventDefault();
-            const email = document.getElementById('email').value;
+        // Global variables
+        let currentData = null;
+        let currentAnalysisResults = null;
+        let isLoggedIn = false;
+
+        // Authentication
+        function checkAuth() {
+            const username = document.getElementById('username').value;
             const password = document.getElementById('password').value;
             
-            // Simple authentication (replace with real authentication)
-            if (email === 'stoicdaniela@gmail.com' && password === 'admin123') {
+            if (username === 'admin' && password === 'admin123') {
+                return true;
+            }
+            return false;
+        }
+
+        function login() {
+            if (checkAuth()) {
                 document.getElementById('login-screen').style.display = 'none';
                 document.getElementById('main-app').style.display = 'block';
-                showScreen('dashboard');
+                isLoggedIn = true;
+                showStatus('success', 'Успешно влизане!');
             } else {
-                alert('Грешен email или парола!');
+                showStatus('error', 'Грешно потребителско име или парола!');
             }
-        });
+        }
 
-        // Logout functionality
         function logout() {
-            document.getElementById('main-app').style.display = 'none';
             document.getElementById('login-screen').style.display = 'flex';
-            document.getElementById('email').value = '';
+            document.getElementById('main-app').style.display = 'none';
+            isLoggedIn = false;
+            
+            // Reset form
+            document.getElementById('username').value = '';
             document.getElementById('password').value = '';
         }
 
-        // Screen navigation
-        function showScreen(screenName) {
-            // Hide all screens
-            const screens = document.querySelectorAll('.screen');
-            screens.forEach(screen => screen.classList.remove('active'));
-            
-            // Remove active class from all nav buttons
-            const navButtons = document.querySelectorAll('.nav-btn');
-            navButtons.forEach(btn => btn.classList.remove('active'));
-            
-            // Show selected screen
-            document.getElementById(screenName + '-screen').classList.add('active');
-            
-            // Add active class to clicked nav button
-            event.target.classList.add('active');
+        // Login form handler
+        document.getElementById('login-form').addEventListener('submit', function(e) {
+            e.preventDefault();
+            login();
+        });
+
+        // File handling with XLSX support
+        function setupFileHandling() {
+            const fileInput = document.getElementById('file-input');
+            const uploadArea = document.getElementById('upload-area');
+
+            fileInput.addEventListener('change', handleFileSelect);
+            uploadArea.addEventListener('dragover', handleDragOver);
+            uploadArea.addEventListener('drop', handleDrop);
+            uploadArea.addEventListener('dragleave', handleDragLeave);
         }
 
-        // Market Basket Analysis functionality
-        let analysisData = null;
+        function handleFileSelect(event) {
+            const file = event.target.files[0];
+            if (file) {
+                handleFileUpload(file);
+            }
+        }
 
-        // File upload handling
-        const uploadArea = document.getElementById('upload-area');
-        const fileInput = document.getElementById('file-input');
+        function handleDragOver(event) {
+            event.preventDefault();
+            event.currentTarget.classList.add('dragover');
+        }
 
-        uploadArea.addEventListener('dragover', function(e) {
-            e.preventDefault();
-            uploadArea.classList.add('dragover');
-        });
-
-        uploadArea.addEventListener('dragleave', function(e) {
-            e.preventDefault();
-            uploadArea.classList.remove('dragover');
-        });
-
-        uploadArea.addEventListener('drop', function(e) {
-            e.preventDefault();
-            uploadArea.classList.remove('dragover');
-            const files = e.dataTransfer.files;
+        function handleDrop(event) {
+            event.preventDefault();
+            event.currentTarget.classList.remove('dragover');
+            
+            const files = event.dataTransfer.files;
             if (files.length > 0) {
                 handleFileUpload(files[0]);
             }
-        });
+        }
 
-        fileInput.addEventListener('change', function(e) {
-            if (e.target.files.length > 0) {
-                handleFileUpload(e.target.files[0]);
-            }
-        });
+        function handleDragLeave(event) {
+            event.currentTarget.classList.remove('dragover');
+        }
 
         function handleFileUpload(file) {
-            showStatus('info', `Качва се файл: ${file.name}...`);
-            showProgress(0);
-            
-            const reader = new FileReader();
-            reader.onload = function(e) {
-                try {
-                    showProgress(50);
-                    setTimeout(() => {
-                        if (file.name.endsWith('.csv')) {
-                            parseCSV(e.target.result);
-                        } else if (file.name.endsWith('.xlsx')) {
-                            showStatus('error', 'XLSX файловете ще бъдат поддържани в следваща версия. Моля, използвайте CSV формат.');
-                            hideProgress();
-                            return;
-                        }
-                        showProgress(100);
-                        setTimeout(hideProgress, 1000);
-                    }, 500);
-                } catch (error) {
-                    showStatus('error', 'Грешка при обработка на файла: ' + error.message);
-                    hideProgress();
-                }
-            };
-            reader.readAsText(file);
-        }
+            if (!file) return;
 
-        function parseCSV(csvText) {
-            const lines = csvText.split('\n');
-            const headers = lines[0].split(',').map(h => h.trim());
-            
-            const data = [];
-            for (let i = 1; i < lines.length; i++) {
-                if (lines[i].trim()) {
-                    const values = lines[i].split(',').map(v => v.trim());
-                    if (values.length >= headers.length) {
-                        const row = {};
-                        headers.forEach((header, index) => {
-                            row[header] = values[index];
-                        });
-                        data.push(row);
+            showStatus('info', 'Обработка на файла...');
+
+            if (file.name.endsWith('.csv')) {
+                const reader = new FileReader();
+                reader.onload = function(e) {
+                    try {
+                        const csvContent = e.target.result;
+                        currentData = parseCSV(csvContent);
+                        showStatus('success', `CSV файлът е зареден успешно! Намерени са ${currentData.length} записа.`);
+                        enableAnalysisButtons();
+                    } catch (error) {
+                        showStatus('error', 'Грешка при четенето на CSV файла: ' + error.message);
                     }
-                }
-            }
-            
-            showStatus('success', `Успешно заредени ${data.length} записа!`);
-            analysisData = data;
-            performAnalysis();
-        }
-
-        function performAnalysis() {
-            if (!analysisData || analysisData.length === 0) {
-                showStatus('error', 'Няма данни за анализ!');
-                return;
-            }
-
-            // Smart column detection
-            const headers = Object.keys(analysisData[0]);
-            
-            // Find date column
-            const dateCol = headers.find(h => 
-                h.toLowerCase().includes('дата') || 
-                h.toLowerCase().includes('date') || 
-                h.toLowerCase().includes('време')
-            ) || headers[0];
-            
-            // Find customer/transaction ID column
-            const idCol = headers.find(h => 
-                h.toLowerCase() === 'id' ||
-                h.toLowerCase().includes('клиент') ||
-                h.toLowerCase().includes('customer') ||
-                h.toLowerCase().includes('transaction') ||
-                h.toLowerCase().includes('бон')
-            );
-            
-            // Find product column
-            const productCol = headers.find(h => 
-                h.toLowerCase().includes('продукт') || 
-                h.toLowerCase().includes('product') ||
-                h.toLowerCase().includes('item') ||
-                h.toLowerCase().includes('артикул')
-            );
-
-            if (!productCol) {
-                showStatus('error', 'Не е открита колона за продукти!');
-                return;
-            }
-
-            // Group transactions
-            const transactions = {};
-            
-            analysisData.forEach((row, index) => {
-                // Create transaction key
-                let key;
-                if (idCol && row[idCol]) {
-                    // Use ID + Date if available
-                    key = `${row[idCol]}_${row[dateCol] || 'unknown'}`;
-                } else {
-                    // Fallback: use date or row groups
-                    const dateValue = row[dateCol] || 'unknown';
-                    key = `transaction_${dateValue}_${Math.floor(index / 5)}`; // Group every 5 rows as one transaction
-                }
-                
-                if (!transactions[key]) {
-                    transactions[key] = [];
-                }
-                
-                const product = row[productCol];
-                if (product && !transactions[key].includes(product)) {
-                    transactions[key].push(product);
-                }
-            });
-
-            // Find frequent combinations
-            const combinations = {};
-            const transactionList = Object.values(transactions);
-            
-            // Find pairs
-            transactionList.forEach(transaction => {
-                if (transaction.length >= 2) {
-                    for (let i = 0; i < transaction.length; i++) {
-                        for (let j = i + 1; j < transaction.length; j++) {
-                            const combo = [transaction[i], transaction[j]].sort().join(' + ');
-                            combinations[combo] = (combinations[combo] || 0) + 1;
-                        }
+                };
+                reader.readAsText(file);
+            } else if (file.name.endsWith('.xlsx')) {
+                const reader = new FileReader();
+                reader.onload = function(e) {
+                    try {
+                        const data = new Uint8Array(e.target.result);
+                        const workbook = XLSX.read(data, { type: 'array' });
+                        
+                        // Get the first worksheet
+                        const worksheetName = workbook.SheetNames[0];
+                        const worksheet = workbook.Sheets[worksheetName];
+                        
+                        // Convert to CSV format
+                        const csvContent = XLSX.utils.sheet_to_csv(worksheet);
+                        currentData = parseCSV(csvContent);
+                        
+                        showStatus('success', `XLSX файлът е зареден успешно! Намерени са ${currentData.length} записа от лист "${worksheetName}".`);
+                        enableAnalysisButtons();
+                    } catch (error) {
+                        showStatus('error', 'Грешка при четенето на XLSX файла: ' + error.message);
                     }
-                }
-            });
-
-            // Sort combinations by frequency
-            const sortedCombinations = Object.entries(combinations)
-                .sort((a, b) => b[1] - a[1])
-                .slice(0, 10);
-
-            // Show detected columns for debugging (only if needed)
-            if (combinations.length === 0) {
-                showStatus('info', `Открити колони - Дата: "${dateCol}", ID: "${idCol || 'няма'}", Продукт: "${productCol}". Няма комбинации за показване.`);
-            }
-
-            displayResults(sortedCombinations, transactionList, { dateCol, idCol, productCol });
-        }
-
-        // Global variables for charts
-        let combinationsChart = null;
-        let productsChart = null;
-
-        function displayResults(combinations, transactions, columnInfo) {
-            document.getElementById('analysis-results').style.display = 'block';
-            
-            // Display combinations
-            const combinationsList = document.getElementById('combinations-list');
-            combinationsList.innerHTML = '';
-            
-            if (combinations.length === 0) {
-                combinationsList.innerHTML = '<p>Не са открити комбинации. Всяка транзакция съдържа само един продукт.</p>';
+                };
+                reader.readAsArrayBuffer(file);
             } else {
-                combinations.forEach(([combo, count], index) => {
-                    const percentage = ((count / transactions.length) * 100).toFixed(1);
-                    const item = document.createElement('div');
-                    item.className = 'combination-item';
-                    item.innerHTML = `
-                        <div class="combination-header">${index + 1}. ${combo}</div>
-                        <div class="combination-details">
-                            Честота: ${count} пъти (${percentage}% от транзакциите)
-                        </div>
-                    `;
-                    combinationsList.appendChild(item);
-                });
+                showStatus('error', 'Неподдържан файлов формат. Моля, използвайте CSV или XLSX файлове.');
+            }
+        }
+
+        function parseCSV(csvContent) {
+            const lines = csvContent.trim().split('\n');
+            if (lines.length === 0) {
+                throw new Error('Файлът е празен');
             }
 
-            // Display statistics
-            const uniqueProducts = new Set(analysisData.map(row => row[columnInfo.productCol])).size;
-            const avgSupport = combinations.length > 0 ? 
-                (combinations.reduce((sum, [, count]) => sum + count, 0) / combinations.length).toFixed(1) : 0;
+            const headers = lines[0].split(',').map(h => h.trim().replace(/"/g, ''));
+            const data = [];
 
-            const statisticsContent = document.getElementById('statistics-content');
-            statisticsContent.innerHTML = `
-                <p><strong>Общо транзакции:</strong> ${transactions.length}</p>
-                <p><strong>Общо записи в данните:</strong> ${analysisData.length}</p>
-                <p><strong>Уникални продукти:</strong> ${uniqueProducts}</p>
-                <p><strong>Открити комбинации:</strong> ${combinations.length}</p>
-                <p><strong>Средна поддръжка:</strong> ${avgSupport} транзакции</p>
-                <hr style="margin: 15px 0;">
-                <p><strong>Открити колони:</strong></p>
-                <p>• Дата: "${columnInfo.dateCol}"</p>
-                <p>• ID/Бон: "${columnInfo.idCol || 'няма - използвано групиране'}"</p>
-                <p>• Продукт: "${columnInfo.productCol}"</p>
+            for (let i = 1; i < lines.length; i++) {
+                const values = lines[i].split(',').map(v => v.trim().replace(/"/g, ''));
+                if (values.length >= headers.length) {
+                    const record = {};
+                    headers.forEach((header, index) => {
+                        record[header] = values[index] || '';
+                    });
+                    data.push(record);
+                }
+            }
+
+            return data;
+        }
+
+        function enableAnalysisButtons() {
+            document.getElementById('market-basket-btn').disabled = false;
+        }
+
+        // Market Basket Analysis
+        function runMarketBasketAnalysis() {
+            if (!currentData || currentData.length === 0) {
+                showStatus('error', 'Първо заредете данни!');
+                return;
+            }
+
+            showStatus('info', 'Извършване на Market Basket Analysis...');
+
+            try {
+                // Smart column detection
+                const headers = Object.keys(currentData[0]);
+                
+                // Find ID column (transaction identifier)
+                const idColumn = findColumnName(headers, ['id', 'айди', 'transaction', 'транзакция', 'номер', 'bill', 'receipt']);
+                
+                // Find Date column
+                const dateColumn = findColumnName(headers, ['дата', 'date', 'время', 'time', 'timestamp']);
+                
+                // Find Product column
+                const productColumn = findColumnName(headers, ['продукт', 'product', 'item', 'товар', 'стока', 'артикул']);
+
+                if (!idColumn || !productColumn) {
+                    throw new Error('Не могат да бъдат открити необходимите колони. Моля, уверете се, че файлът съдържа колони за ID и Продукт.');
+                }
+
+                // Group data by transaction (ID + Date if available)
+                const transactions = new Map();
+                
+                currentData.forEach(record => {
+                    const id = record[idColumn];
+                    const date = dateColumn ? record[dateColumn] : '';
+                    const product = record[productColumn];
+                    
+                    if (!id || !product) return;
+                    
+                    const transactionKey = dateColumn ? `${id}_${date}` : id;
+                    
+                    if (!transactions.has(transactionKey)) {
+                        transactions.set(transactionKey, new Set());
+                    }
+                    
+                    transactions.get(transactionKey).add(product.trim());
+                });
+
+                // Convert to arrays for analysis
+                const transactionArrays = Array.from(transactions.values()).map(set => Array.from(set));
+                
+                // Find frequent itemsets and association rules
+                const combinations = findFrequentCombinations(transactionArrays);
+                
+                // Display results
+                displayMarketBasketResults(combinations, transactions.size, currentData.length);
+                
+                // Store for visualization
+                currentAnalysisResults = combinations;
+                
+                showStatus('success', 'Market Basket Analysis завършен успешно!');
+                
+            } catch (error) {
+                showStatus('error', 'Грешка при анализа: ' + error.message);
+            }
+        }
+
+        function findColumnName(headers, possibleNames) {
+            for (const name of possibleNames) {
+                const found = headers.find(h => h.toLowerCase().includes(name.toLowerCase()));
+                if (found) return found;
+            }
+            return null;
+        }
+
+        function findFrequentCombinations(transactions) {
+            const itemCounts = new Map();
+            const combinations = new Map();
+            
+            // Count individual items
+            transactions.forEach(transaction => {
+                transaction.forEach(item => {
+                    itemCounts.set(item, (itemCounts.get(item) || 0) + 1);
+                });
+            });
+
+            // Find 2-item combinations
+            transactions.forEach(transaction => {
+                for (let i = 0; i < transaction.length; i++) {
+                    for (let j = i + 1; j < transaction.length; j++) {
+                        const combo = [transaction[i], transaction[j]].sort().join(' + ');
+                        combinations.set(combo, (combinations.get(combo) || 0) + 1);
+                    }
+                }
+            });
+
+            // Convert to sorted array
+            return Array.from(combinations.entries())
+                .sort((a, b) => b[1] - a[1])
+                .slice(0, 10); // Top 10 combinations
+        }
+
+        function displayMarketBasketResults(combinations, totalTransactions, totalRecords) {
+            const resultsDiv = document.getElementById('basket-results');
+            const statsDiv = document.getElementById('basket-stats');
+            const combinationsDiv = document.getElementById('basket-combinations');
+
+            // Statistics
+            const uniqueProducts = new Set();
+            combinations.forEach(([combo, count]) => {
+                const [product1, product2] = combo.split(' + ');
+                uniqueProducts.add(product1);
+                uniqueProducts.add(product2);
+            });
+
+            const avgSupport = combinations.length > 0 ? 
+                (combinations.reduce((sum, [combo, count]) => sum + count, 0) / combinations.length).toFixed(1) : 0;
+
+            statsDiv.innerHTML = `
+                <div class="stats-grid">
+                    <div class="stat-card">
+                        <div class="stat-number">${totalTransactions}</div>
+                        <div class="stat-label">Общо транзакции</div>
+                    </div>
+                    <div class="stat-card">
+                        <div class="stat-number">${totalRecords}</div>
+                        <div class="stat-label">Общо записи в данните</div>
+                    </div>
+                    <div class="stat-card">
+                        <div class="stat-number">${uniqueProducts.size}</div>
+                        <div class="stat-label">Уникални продукти</div>
+                    </div>
+                    <div class="stat-card">
+                        <div class="stat-number">${combinations.length}</div>
+                        <div class="stat-label">Открити комбинации</div>
+                    </div>
+                    <div class="stat-card">
+                        <div class="stat-number">${avgSupport}</div>
+                        <div class="stat-label">Средна поддръжка</div>
+                    </div>
+                </div>
             `;
 
+            // Top combinations
+            let combinationsHTML = '<h4>🔝 Топ комбинации от продукти:</h4><ul>';
+            combinations.forEach(([combo, count], index) => {
+                const confidence = ((count / totalTransactions) * 100).toFixed(1);
+                combinationsHTML += `<li><strong>${combo}</strong> - ${count} пъти (${confidence}% доверие)</li>`;
+            });
+            combinationsHTML += '</ul>';
+
+            combinationsDiv.innerHTML = combinationsHTML;
+            resultsDiv.style.display = 'block';
+
             // Create visualizations
-            createCharts(combinations, transactions, columnInfo);
+            createVisualizationsFromResults(combinations);
         }
 
-        function createCharts(combinations, transactions, columnInfo) {
-            // Destroy existing charts if they exist
-            if (combinationsChart) {
-                combinationsChart.destroy();
-            }
-            if (productsChart) {
-                productsChart.destroy();
-            }
+        function createVisualizationsFromResults(combinations) {
+            if (combinations.length === 0) return;
 
-            // Create Bar Chart for Top Combinations
-            createCombinationsChart(combinations);
+            document.getElementById('charts-container').style.display = 'block';
+            document.getElementById('no-visualization').style.display = 'none';
+
+            // Create Bar Chart
+            createBarChart(combinations);
             
-            // Create Pie Chart for Product Distribution
-            createProductsChart(columnInfo);
+            // Create Pie Chart
+            createPieChart(combinations);
             
             // Create Network Diagram
             createNetworkDiagram(combinations);
         }
 
-        function createCombinationsChart(combinations) {
-            const ctx = document.getElementById('combinationsChart').getContext('2d');
+        function createBarChart(combinations) {
+            const ctx = document.getElementById('barChart').getContext('2d');
             
-            const topCombinations = combinations.slice(0, 8); // Top 8 combinations
-            const labels = topCombinations.map(([combo, count]) => combo);
-            const data = topCombinations.map(([combo, count]) => count);
-            
-            combinationsChart = new Chart(ctx, {
+            const labels = combinations.slice(0, 8).map(([combo, count]) => combo);
+            const data = combinations.slice(0, 8).map(([combo, count]) => count);
+
+            new Chart(ctx, {
                 type: 'bar',
                 data: {
                     labels: labels,
                     datasets: [{
-                        label: 'Честота на комбинации',
+                        label: 'Брой срещания',
                         data: data,
-                        backgroundColor: [
-                            '#667eea', '#764ba2', '#f093fb', '#f5576c',
-                            '#4facfe', '#00f2fe', '#43e97b', '#38f9d7'
-                        ],
-                        borderColor: '#333',
-                        borderWidth: 1,
-                        borderRadius: 5
+                        backgroundColor: 'rgba(102, 126, 234, 0.8)',
+                        borderColor: 'rgba(102, 126, 234, 1)',
+                        borderWidth: 1
                     }]
                 },
                 options: {
                     responsive: true,
                     maintainAspectRatio: false,
-                    plugins: {
-                        legend: {
-                            display: false
-                        },
-                        tooltip: {
-                            callbacks: {
-                                label: function(context) {
-                                    return `Честота: ${context.parsed.y} пъти`;
-                                }
-                            }
-                        }
-                    },
                     scales: {
                         y: {
                             beginAtZero: true,
                             title: {
                                 display: true,
-                                text: 'Брой появявания'
+                                text: 'Брой срещания'
                             }
                         },
                         x: {
                             title: {
                                 display: true,
                                 text: 'Комбинации от продукти'
-                            },
-                            ticks: {
-                                maxRotation: 45,
-                                minRotation: 45
                             }
+                        }
+                    },
+                    plugins: {
+                        legend: {
+                            display: false
+                        },
+                        title: {
+                            display: true,
+                            text: 'Най-често срещани комбинации'
                         }
                     }
                 }
             });
         }
 
-        function createProductsChart(columnInfo) {
-            const ctx = document.getElementById('productsChart').getContext('2d');
+        function createPieChart(combinations) {
+            const ctx = document.getElementById('pieChart').getContext('2d');
             
-            // Count product frequency
-            const productCounts = {};
-            analysisData.forEach(row => {
-                const product = row[columnInfo.productCol];
-                if (product) {
-                    productCounts[product] = (productCounts[product] || 0) + 1;
-                }
-            });
-
-            const sortedProducts = Object.entries(productCounts)
-                .sort((a, b) => b[1] - a[1])
-                .slice(0, 8); // Top 8 products
-
-            const labels = sortedProducts.map(([product, count]) => product);
-            const data = sortedProducts.map(([product, count]) => count);
+            const labels = combinations.slice(0, 6).map(([combo, count]) => combo);
+            const data = combinations.slice(0, 6).map(([combo, count]) => count);
             
-            productsChart = new Chart(ctx, {
+            const colors = [
+                'rgba(102, 126, 234, 0.8)',
+                'rgba(118, 75, 162, 0.8)',
+                'rgba(40, 167, 69, 0.8)',
+                'rgba(255, 193, 7, 0.8)',
+                'rgba(220, 53, 69, 0.8)',
+                'rgba(23, 162, 184, 0.8)'
+            ];
+
+            new Chart(ctx, {
                 type: 'pie',
                 data: {
                     labels: labels,
                     datasets: [{
                         data: data,
-                        backgroundColor: [
-                            '#FF6384', '#36A2EB', '#FFCE56', '#4BC0C0',
-                            '#9966FF', '#FF9F40', '#FF6384', '#C9CBCF'
-                        ],
-                        borderColor: '#fff',
+                        backgroundColor: colors,
+                        borderColor: colors.map(color => color.replace('0.8', '1')),
                         borderWidth: 2
                     }]
                 },
@@ -884,13 +910,9 @@
                                 usePointStyle: true
                             }
                         },
-                        tooltip: {
-                            callbacks: {
-                                label: function(context) {
-                                    const percentage = ((context.parsed / data.reduce((a, b) => a + b, 0)) * 100).toFixed(1);
-                                    return `${context.label}: ${context.parsed} пъти (${percentage}%)`;
-                                }
-                            }
+                        title: {
+                            display: true,
+                            text: 'Разпределение на топ комбинациите'
                         }
                     }
                 }
@@ -920,62 +942,83 @@
             });
 
             const productArray = Array.from(products);
-            const containerWidth = networkContainer.offsetWidth;
-            const containerHeight = networkContainer.offsetHeight;
+            
+            // Wait for container to be visible and get actual dimensions
+            setTimeout(() => {
+                const containerWidth = networkContainer.offsetWidth || 600;
+                const containerHeight = networkContainer.offsetHeight || 500;
 
-            // Position products in a circle
-            const centerX = containerWidth / 2;
-            const centerY = containerHeight / 2;
-            const radius = Math.min(containerWidth, containerHeight) * 0.3;
-
-            // Create nodes
-            productArray.forEach((product, index) => {
-                const angle = (index / productArray.length) * 2 * Math.PI;
-                const x = centerX + radius * Math.cos(angle) - 50; // -50 for node width
-                const y = centerY + radius * Math.sin(angle) - 15; // -15 for node height
-
-                const node = document.createElement('div');
-                node.className = 'network-node';
-                node.textContent = product;
-                node.style.left = x + 'px';
-                node.style.top = y + 'px';
-                node.setAttribute('data-product', product);
-                
-                networkContainer.appendChild(node);
-            });
-
-            // Create connections (lines)
-            connections.forEach((count, key) => {
-                const [product1, product2] = key.split('-');
-                const node1 = networkContainer.querySelector(`[data-product="${product1}"]`);
-                const node2 = networkContainer.querySelector(`[data-product="${product2}"]`);
-
-                if (node1 && node2) {
-                    const rect1 = node1.getBoundingClientRect();
-                    const rect2 = node2.getBoundingClientRect();
-                    const containerRect = networkContainer.getBoundingClientRect();
-
-                    const x1 = rect1.left - containerRect.left + rect1.width / 2;
-                    const y1 = rect1.top - containerRect.top + rect1.height / 2;
-                    const x2 = rect2.left - containerRect.left + rect2.width / 2;
-                    const y2 = rect2.top - containerRect.top + rect2.height / 2;
-
-                    const length = Math.sqrt((x2 - x1) ** 2 + (y2 - y1) ** 2);
-                    const angle = Math.atan2(y2 - y1, x2 - x1) * 180 / Math.PI;
-
-                    const line = document.createElement('div');
-                    line.className = 'network-line';
-                    line.style.width = length + 'px';
-                    line.style.height = Math.max(2, Math.min(8, count)) + 'px'; // Line thickness based on frequency
-                    line.style.left = x1 + 'px';
-                    line.style.top = y1 + 'px';
-                    line.style.transform = `rotate(${angle}deg)`;
-                    line.style.opacity = Math.min(0.8, count / 10); // Opacity based on frequency
-                    line.title = `${product1} + ${product2}: ${count} пъти`;
-
-                    networkContainer.appendChild(line);
+                // Ensure we have valid dimensions
+                if (containerWidth <= 0 || containerHeight <= 0) {
+                    networkContainer.innerHTML = '<div style="text-align: center; padding-top: 200px; color: #666;">Зареждане на диаграмата...</div>';
+                    return;
                 }
-            });
+
+                // Position products in a circle with margins
+                const margin = 60;
+                const centerX = containerWidth / 2;
+                const centerY = containerHeight / 2;
+                const radius = Math.min(containerWidth - margin * 2, containerHeight - margin * 2) * 0.35;
+
+                // Create nodes with better positioning
+                productArray.forEach((product, index) => {
+                    const angle = (index / productArray.length) * 2 * Math.PI;
+                    const x = centerX + radius * Math.cos(angle) - 60; // Node width ~120px, so center at 60px
+                    const y = centerY + radius * Math.sin(angle) - 15; // Node height ~30px, so center at 15px
+
+                    const node = document.createElement('div');
+                    node.className = 'network-node';
+                    node.textContent = product;
+                    node.style.left = Math.max(5, Math.min(containerWidth - 125, x)) + 'px';
+                    node.style.top = Math.max(5, Math.min(containerHeight - 35, y)) + 'px';
+                    node.setAttribute('data-product', product);
+                    node.title = product; // Tooltip for long product names
+                    
+                    networkContainer.appendChild(node);
+                });
+
+                // Small delay to ensure nodes are positioned
+                setTimeout(() => {
+                    // Create connections (lines)
+                    connections.forEach((count, key) => {
+                        const [product1, product2] = key.split('-');
+                        const node1 = networkContainer.querySelector(`[data-product="${product1}"]`);
+                        const node2 = networkContainer.querySelector(`[data-product="${product2}"]`);
+
+                        if (node1 && node2) {
+                            const rect1 = node1.getBoundingClientRect();
+                            const rect2 = node2.getBoundingClientRect();
+                            const containerRect = networkContainer.getBoundingClientRect();
+
+                            const x1 = rect1.left - containerRect.left + rect1.width / 2;
+                            const y1 = rect1.top - containerRect.top + rect1.height / 2;
+                            const x2 = rect2.left - containerRect.left + rect2.width / 2;
+                            const y2 = rect2.top - containerRect.top + rect2.height / 2;
+
+                            const length = Math.sqrt((x2 - x1) ** 2 + (y2 - y1) ** 2);
+                            const angle = Math.atan2(y2 - y1, x2 - x1) * 180 / Math.PI;
+
+                            const line = document.createElement('div');
+                            line.className = 'network-line';
+                            line.style.width = length + 'px';
+                            line.style.height = Math.max(2, Math.min(8, count)) + 'px'; // Line thickness based on frequency
+                            line.style.left = x1 + 'px';
+                            line.style.top = y1 + 'px';
+                            line.style.transform = `rotate(${angle}deg)`;
+                            line.style.opacity = Math.min(0.8, count / 10); // Opacity based on frequency
+                            line.title = `${product1} + ${product2}: ${count} пъти`;
+
+                            networkContainer.appendChild(line);
+                        }
+                    });
+                }, 100);
+            }, 100);
+        }
+
+        function refreshNetworkDiagram() {
+            if (currentAnalysisResults && currentAnalysisResults.length > 0) {
+                createNetworkDiagram(currentAnalysisResults);
+            }
         }
 
         function showTab(tabName) {
@@ -986,6 +1029,11 @@
             // Show selected tab
             document.getElementById(tabName + '-tab').classList.add('active');
             event.target.classList.add('active');
+            
+            // Refresh network diagram if switching to visualization tab
+            if (tabName === 'visualization' && currentAnalysisResults) {
+                setTimeout(() => refreshNetworkDiagram(), 200);
+            }
         }
 
         function showStatus(type, message) {
@@ -1001,22 +1049,13 @@
             }
         }
 
-        function showProgress(percentage) {
-            const container = document.getElementById('progress-container');
-            const bar = document.getElementById('progress-bar');
-            container.style.display = 'block';
-            bar.style.width = percentage + '%';
-        }
-
-        function hideProgress() {
-            document.getElementById('progress-container').style.display = 'none';
-        }
-
-        // Initialize the app
+        // Initialize the application
         document.addEventListener('DOMContentLoaded', function() {
-            // Auto-fill login for testing (remove in production)
-            document.getElementById('email').value = 'stoicdaniela@gmail.com';
-            document.getElementById('password').value = 'admin123';
+            setupFileHandling();
+            
+            // Show login screen
+            document.getElementById('login-screen').style.display = 'flex';
+            document.getElementById('main-app').style.display = 'none';
         });
     </script>
 </body>
