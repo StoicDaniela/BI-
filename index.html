@@ -13,7 +13,7 @@
 
         body {
             font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
-            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+            background: linear-gradient(135deg, #667eea 0%, #0D8BB1 100%);
             min-height: 100vh;
         }
 
@@ -73,7 +73,7 @@
         .login-btn {
             width: 100%;
             padding: 12px;
-            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+            background: linear-gradient(135deg, #667eea 0%, #0D8BB1 100%);
             color: white;
             border: none;
             border-radius: 5px;
@@ -152,7 +152,7 @@
         }
 
         .tab-btn.active {
-            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+            background: linear-gradient(135deg, #667eea 0%, #0D8BB1 100%);
             color: white;
             transform: translateY(-2px);
             box-shadow: 0 5px 15px rgba(102, 126, 234, 0.4);
@@ -231,7 +231,7 @@
         }
 
         .upload-btn {
-            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+            background: linear-gradient(135deg, #667eea 0%, #0D8BB1 100%);
             color: white;
             border: none;
             padding: 15px 30px;
@@ -272,7 +272,7 @@
         }
 
         .module-btn {
-            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+            background: linear-gradient(135deg, #667eea 0%, #0D8BB1 100%);
             color: white;
             border: none;
             padding: 15px 30px;
@@ -345,7 +345,7 @@
         }
 
         .stat-card {
-            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+            background: linear-gradient(135deg, #667eea 0%, #0D8BB1 100%);
             color: white;
             padding: 20px;
             border-radius: 10px;
@@ -896,9 +896,12 @@
                         <div class="stat-number">${columnCount}</div>
                         <div class="stat-label">Колони</div>
                     </div>
-                    <div class="stat-card">
-                        <div class="stat-number">${columns.join(', ')}</div>
-                        <div class="stat-label">Налични полета</div>
+                </div>
+                
+                <div style="margin-top: 30px; padding: 20px; background: #f8f9ff; border-radius: 10px;">
+                    <h4 style="color: #333; margin-bottom: 15px;">📋 Налични полета:</h4>
+                    <div style="background: white; padding: 15px; border-radius: 8px; border-left: 4px solid #0D8BB1;">
+                        <strong style="color: #0D8BB1;">${columns.join(', ')}</strong>
                     </div>
                 </div>
                 
@@ -1026,7 +1029,7 @@
             `;
             
             const maxCount = Math.max(...combinations.map(([combo, count]) => count));
-            const colors = ['#667eea', '#764ba2', '#f093fb', '#f5576c', '#4facfe', '#00f2fe'];
+            const colors = ['#0D8BB1', '#667eea', '#f093fb', '#f5576c', '#4facfe', '#00f2fe'];
             
             combinations.slice(0, 6).forEach(([combo, count], index) => {
                 const confidence = ((count / totalTransactions) * 100).toFixed(1);
@@ -1074,7 +1077,7 @@
         function createSimpleBarChart(combinations) {
             const container = document.getElementById('simpleBarChart');
             const maxValue = Math.max(...combinations.map(([combo, count]) => count));
-            const colors = ['#667eea', '#764ba2', '#f093fb', '#f5576c', '#4facfe', '#00f2fe', '#a8e6cf', '#ffd93d'];
+            const colors = ['#0D8BB1', '#667eea', '#f093fb', '#f5576c', '#4facfe', '#00f2fe', '#a8e6cf', '#ffd93d'];
             
             let html = '';
             combinations.slice(0, 8).forEach(([combo, count], index) => {
@@ -1099,14 +1102,18 @@
             const container = document.getElementById('networkDiagram');
             container.innerHTML = '<canvas id="networkCanvas" class="network-canvas"></canvas>';
             
-            const canvas = document.getElementById('networkCanvas');
-            const ctx = canvas.getContext('2d');
-            
-            // Set canvas size
-            canvas.width = container.clientWidth;
-            canvas.height = container.clientHeight;
-
-            renderNetworkDiagram(ctx, combinations, canvas.width, canvas.height);
+            // Wait for DOM to update, then set canvas size
+            setTimeout(() => {
+                const canvas = document.getElementById('networkCanvas');
+                const ctx = canvas.getContext('2d');
+                
+                // Set canvas size properly
+                const rect = container.getBoundingClientRect();
+                canvas.width = rect.width || 800;
+                canvas.height = rect.height || 400;
+                
+                renderNetworkDiagram(ctx, combinations, canvas.width, canvas.height);
+            }, 100);
         }
 
         function renderNetworkDiagram(ctx, combinations, width, height) {
