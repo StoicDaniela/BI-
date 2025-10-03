@@ -383,11 +383,18 @@
 
         .network-line {
             position: absolute;
-            background: #333;
             transform-origin: left center;
-            opacity: 0.3;
             pointer-events: none;
+            border-radius: 2px;
+            box-shadow: 0 1px 3px rgba(0,0,0,0.2);
         }
+
+        .network-line.strength-1 { background: linear-gradient(90deg, #ff6b6b, #ee5a52); }
+        .network-line.strength-2 { background: linear-gradient(90deg, #4ecdc4, #44a08d); }
+        .network-line.strength-3 { background: linear-gradient(90deg, #45b7d1, #96c93d); }
+        .network-line.strength-4 { background: linear-gradient(90deg, #f9ca24, #f0932b); }
+        .network-line.strength-5 { background: linear-gradient(90deg, #eb4d4b, #6639b6); }
+        .network-line.strength-6 { background: linear-gradient(90deg, #a55eea, #26de81); }
 
         @media (max-width: 768px) {
             .container {
@@ -893,6 +900,9 @@
 
                 // Create connections
                 setTimeout(() => {
+                    // First, find max count for color scaling
+                    const maxCount = Math.max(...Array.from(connections.values()));
+                    
                     connections.forEach((count, key) => {
                         const [product1, product2] = key.split('-');
                         const node1 = networkContainer.querySelector(`[data-product="${product1}"]`);
@@ -911,15 +921,18 @@
                             const length = Math.sqrt((x2 - x1) ** 2 + (y2 - y1) ** 2);
                             const angle = Math.atan2(y2 - y1, x2 - x1) * 180 / Math.PI;
 
+                            // Determine color strength based on count
+                            const strengthLevel = Math.min(6, Math.max(1, Math.ceil((count / maxCount) * 6)));
+
                             const line = document.createElement('div');
-                            line.className = 'network-line';
+                            line.className = `network-line strength-${strengthLevel}`;
                             line.style.width = length + 'px';
-                            line.style.height = Math.max(2, Math.min(6, count)) + 'px';
+                            line.style.height = Math.max(3, Math.min(8, count + 2)) + 'px'; // Slightly thicker lines
                             line.style.left = x1 + 'px';
                             line.style.top = y1 + 'px';
                             line.style.transform = `rotate(${angle}deg)`;
-                            line.style.opacity = Math.min(0.7, count / 8);
-                            line.title = `${product1} + ${product2}: ${count} пъти`;
+                            line.style.opacity = Math.min(0.9, 0.4 + (count / maxCount) * 0.5); // Better opacity range
+                            line.title = `${product1} + ${product2}: ${count} пъти (сила: ${strengthLevel}/6)`;
 
                             networkContainer.appendChild(line);
                         }
