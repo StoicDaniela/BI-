@@ -354,7 +354,9 @@
                         Избери файл
                     </button>
                     <p style="margin-top: 10px; color: #666; font-size: 14px;">
-                        Файлът трябва да съдържа колони: Дата, Клиент ID, Продукт, Количество
+                        Файлът трябва да съдържа минимум колони: <strong>Дата, Продукт</strong><br>
+                        Опционални: ID/Бон (за групиране на транзакции), Клиент, Количество<br>
+                        <em>Колоните се разпознават автоматично по име</em>
                     </p>
                 </div>
 
@@ -536,15 +538,58 @@
                 return;
             }
 
-            // Group transactions by customer and date
+            // Smart column detection
+            const headers = Object.keys(analysisData[0]);
+            
+            // Find date column
+            const dateCol = headers.find(h => 
+                h.toLowerCase().includes('дата') || 
+                h.toLowerCase().includes('date') || 
+                h.toLowerCase().includes('време')
+            ) || headers[0];
+            
+            // Find customer/transaction ID column
+            const idCol = headers.find(h => 
+                h.toLowerCase() === 'id' ||
+                h.toLowerCase().includes('клиент') ||
+                h.toLowerCase().includes('customer') ||
+                h.toLowerCase().includes('transaction') ||
+                h.toLowerCase().includes('бон')
+            );
+            
+            // Find product column
+            const productCol = headers.find(h => 
+                h.toLowerCase().includes('продукт') || 
+                h.toLowerCase().includes('product') ||
+                h.toLowerCase().includes('item') ||
+                h.toLowerCase().includes('артикул')
+            );
+
+            if (!productCol) {
+                showStatus('error', 'Не е открита колона за продукти!');
+                return;
+            }
+
+            // Group transactions
             const transactions = {};
             
-            analysisData.forEach(row => {
-                const key = `${row['Клиент ID'] || row['Customer ID'] || row['customer_id']}_${row['Дата'] || row['Date'] || row['date']}`;
+            analysisData.forEach((row, index) => {
+                // Create transaction key
+                let key;
+                if (idCol && row[idCol]) {
+                    // Use ID + Date if available
+                    key = `${row[idCol]}_${row[dateCol] || 'unknown'}`;
+                } else {
+                    // Fallback: use date or row groups
+                    const dateValue = row[dateCol] || 'unknown';
+                    key = `transaction_${dateValue}_${Math.floor(index / 5)}`; // Group every 5 rows as one transaction
+                }
+                
                 if (!transactions[key]) {
                     transactions[key] = [];
                 }
-                const product = row['Продукт'] || row['Product'] || row['product'];
+                
+                const product = row[productCol];
                 if (product && !transactions[key].includes(product)) {
                     transactions[key].push(product);
                 }
@@ -571,36 +616,55 @@
                 .sort((a, b) => b[1] - a[1])
                 .slice(0, 10);
 
-            displayResults(sortedCombinations, transactionList);
+            // Show detected columns for debugging (only if needed)
+            if (combinations.length === 0) {
+                showStatus('info', `Открити колони - Дата: "${dateCol}", ID: "${idCol || 'няма'}", Продукт: "${productCol}". Няма комбинации за показване.`);
+            }
+
+            displayResults(sortedCombinations, transactionList, { dateCol, idCol, productCol });
         }
 
-        function displayResults(combinations, transactions) {
+        function displayResults(combinations, transactions, columnInfo) {
             document.getElementById('analysis-results').style.display = 'block';
             
             // Display combinations
             const combinationsList = document.getElementById('combinations-list');
             combinationsList.innerHTML = '';
             
-            combinations.forEach(([combo, count], index) => {
-                const percentage = ((count / transactions.length) * 100).toFixed(1);
-                const item = document.createElement('div');
-                item.className = 'combination-item';
-                item.innerHTML = `
-                    <div class="combination-header">${index + 1}. ${combo}</div>
-                    <div class="combination-details">
-                        Честота: ${count} пъти (${percentage}% от транзакциите)
-                    </div>
-                `;
-                combinationsList.appendChild(item);
-            });
+            if (combinations.length === 0) {
+                combinationsList.innerHTML = '<p>Не са открити комбинации. Всяка транзакция съдържа само един продукт.</p>';
+            } else {
+                combinations.forEach(([combo, count], index) => {
+                    const percentage = ((count / transactions.length) * 100).toFixed(1);
+                    const item = document.createElement('div');
+                    item.className = 'combination-item';
+                    item.innerHTML = `
+                        <div class="combination-header">${index + 1}. ${combo}</div>
+                        <div class="combination-details">
+                            Честота: ${count} пъти (${percentage}% от транзакциите)
+                        </div>
+                    `;
+                    combinationsList.appendChild(item);
+                });
+            }
 
             // Display statistics
+            const uniqueProducts = new Set(analysisData.map(row => row[columnInfo.productCol])).size;
+            const avgSupport = combinations.length > 0 ? 
+                (combinations.reduce((sum, [, count]) => sum + count, 0) / combinations.length).toFixed(1) : 0;
+
             const statisticsContent = document.getElementById('statistics-content');
             statisticsContent.innerHTML = `
                 <p><strong>Общо транзакции:</strong> ${transactions.length}</p>
-                <p><strong>Уникални продукти:</strong> ${new Set(analysisData.map(row => row['Продукт'] || row['Product'] || row['product'])).size}</p>
+                <p><strong>Общо записи в данните:</strong> ${analysisData.length}</p>
+                <p><strong>Уникални продукти:</strong> ${uniqueProducts}</p>
                 <p><strong>Открити комбинации:</strong> ${combinations.length}</p>
-                <p><strong>Средна поддръжка:</strong> ${(combinations.reduce((sum, [, count]) => sum + count, 0) / combinations.length || 0).toFixed(1)} транзакции</p>
+                <p><strong>Средна поддръжка:</strong> ${avgSupport} транзакции</p>
+                <hr style="margin: 15px 0;">
+                <p><strong>Открити колони:</strong></p>
+                <p>• Дата: "${columnInfo.dateCol}"</p>
+                <p>• ID/Бон: "${columnInfo.idCol || 'няма - използвано групиране'}"</p>
+                <p>• Продукт: "${columnInfo.productCol}"</p>
             `;
         }
 
