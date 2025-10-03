@@ -4,8 +4,6 @@
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>BI Система за Анализ</title>
-    <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
-    <script src="https://cdnjs.cloudflare.com/ajax/libs/xlsx/0.18.5/xlsx.full.min.js"></script>
     <style>
         * {
             margin: 0;
@@ -90,6 +88,10 @@
 
         .main-app {
             display: none;
+        }
+
+        .main-app.show {
+            display: block;
         }
 
         .header {
@@ -251,66 +253,6 @@
             border-radius: 8px;
         }
 
-        .network-container {
-            height: 500px;
-            border: 1px solid #ddd;
-            border-radius: 8px;
-            position: relative;
-            overflow: hidden;
-            background: #fafafa;
-        }
-
-        .network-node {
-            position: absolute;
-            background: #667eea;
-            color: white;
-            padding: 8px 12px;
-            border-radius: 20px;
-            font-size: 12px;
-            font-weight: bold;
-            cursor: pointer;
-            transition: all 0.3s;
-            box-shadow: 0 2px 5px rgba(0,0,0,0.2);
-            white-space: nowrap;
-            max-width: 120px;
-            text-overflow: ellipsis;
-            overflow: hidden;
-        }
-
-        .network-node:hover {
-            background: #764ba2;
-            transform: scale(1.1);
-            z-index: 10;
-        }
-
-        .network-line {
-            position: absolute;
-            background: #333;
-            transform-origin: left center;
-            opacity: 0.3;
-            pointer-events: none;
-        }
-
-        .chart-container {
-            margin: 20px 0;
-            padding: 20px;
-            background: white;
-            border-radius: 8px;
-            box-shadow: 0 2px 5px rgba(0,0,0,0.1);
-        }
-
-        .chart-title {
-            font-size: 18px;
-            font-weight: bold;
-            margin-bottom: 15px;
-            color: #333;
-            text-align: center;
-        }
-
-        .chart-canvas {
-            max-height: 400px;
-        }
-
         .stats-grid {
             display: grid;
             grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));
@@ -351,19 +293,100 @@
             background: #c82333;
         }
 
-        .refresh-network-btn {
-            background: #17a2b8;
-            color: white;
-            padding: 8px 16px;
-            border: none;
-            border-radius: 5px;
-            cursor: pointer;
-            margin: 10px 0;
-            font-size: 14px;
+        .simple-chart {
+            margin: 20px 0;
+            padding: 20px;
+            background: white;
+            border-radius: 8px;
+            box-shadow: 0 2px 5px rgba(0,0,0,0.1);
         }
 
-        .refresh-network-btn:hover {
-            background: #138496;
+        .chart-title {
+            font-size: 18px;
+            font-weight: bold;
+            margin-bottom: 15px;
+            color: #333;
+            text-align: center;
+        }
+
+        .bar-chart {
+            display: flex;
+            align-items: end;
+            height: 200px;
+            border-bottom: 2px solid #ddd;
+            border-left: 2px solid #ddd;
+            padding: 10px;
+            margin: 20px 0;
+        }
+
+        .bar {
+            flex: 1;
+            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+            margin: 0 2px;
+            border-radius: 4px 4px 0 0;
+            position: relative;
+            min-height: 20px;
+        }
+
+        .bar-label {
+            position: absolute;
+            bottom: -25px;
+            left: 50%;
+            transform: translateX(-50%);
+            font-size: 10px;
+            color: #666;
+            white-space: nowrap;
+        }
+
+        .bar-value {
+            position: absolute;
+            top: -20px;
+            left: 50%;
+            transform: translateX(-50%);
+            font-size: 10px;
+            font-weight: bold;
+            color: #333;
+        }
+
+        .network-container {
+            height: 400px;
+            border: 1px solid #ddd;
+            border-radius: 8px;
+            position: relative;
+            overflow: hidden;
+            background: #fafafa;
+            margin: 20px 0;
+        }
+
+        .network-node {
+            position: absolute;
+            background: #667eea;
+            color: white;
+            padding: 8px 12px;
+            border-radius: 20px;
+            font-size: 12px;
+            font-weight: bold;
+            cursor: pointer;
+            transition: all 0.3s;
+            box-shadow: 0 2px 5px rgba(0,0,0,0.2);
+            white-space: nowrap;
+            max-width: 120px;
+            text-overflow: ellipsis;
+            overflow: hidden;
+        }
+
+        .network-node:hover {
+            background: #764ba2;
+            transform: scale(1.1);
+            z-index: 10;
+        }
+
+        .network-line {
+            position: absolute;
+            background: #333;
+            transform-origin: left center;
+            opacity: 0.3;
+            pointer-events: none;
         }
 
         @media (max-width: 768px) {
@@ -380,7 +403,7 @@
             }
 
             .network-container {
-                height: 400px;
+                height: 300px;
             }
         }
     </style>
@@ -392,12 +415,12 @@
             <h2>🔐 BI Система - Вход</h2>
             <form id="login-form">
                 <div class="form-group">
-                    <label for="username">Потребителско име:</label>
-                    <input type="text" id="username" name="username" required>
+                    <label for="email">Email:</label>
+                    <input type="email" id="email" name="email" value="stoicdaniela@gmail.com" required>
                 </div>
                 <div class="form-group">
                     <label for="password">Парола:</label>
-                    <input type="password" id="password" name="password" required>
+                    <input type="password" id="password" name="password" value="admin123" required>
                 </div>
                 <button type="submit" class="login-btn">Влизане</button>
             </form>
@@ -428,8 +451,8 @@
                 <div class="upload-section">
                     <div class="upload-area" id="upload-area">
                         <h3>📂 Избиране на файл</h3>
-                        <p>Преместете XLSX или CSV файл тук или натиснете бутона</p>
-                        <input type="file" id="file-input" class="file-input" accept=".xlsx,.csv">
+                        <p>Преместете CSV файл тук или натиснете бутона</p>
+                        <input type="file" id="file-input" class="file-input" accept=".csv">
                         <button class="upload-btn" onclick="document.getElementById('file-input').click()">
                             Избиране на файл
                         </button>
@@ -469,24 +492,21 @@
                 <p>Графично представяне на анализа от Пазарната Кошница</p>
                 
                 <div id="charts-container" style="display: none;">
-                    <!-- Bar Chart -->
-                    <div class="chart-container">
-                        <div class="chart-title">📊 Топ Комбинации (Bar Chart)</div>
-                        <canvas id="barChart" class="chart-canvas"></canvas>
-                    </div>
-
-                    <!-- Pie Chart -->
-                    <div class="chart-container">
-                        <div class="chart-title">🥧 Разпределение на Комбинациите (Pie Chart)</div>
-                        <canvas id="pieChart" class="chart-canvas"></canvas>
+                    <!-- Simple Bar Chart -->
+                    <div class="simple-chart">
+                        <div class="chart-title">📊 Топ Комбинации</div>
+                        <div id="simpleBarChart" class="bar-chart">
+                            <div style="text-align: center; width: 100%; padding: 50px; color: #666;">
+                                Графиката ще се покаже след анализ...
+                            </div>
+                        </div>
                     </div>
 
                     <!-- Network Diagram -->
-                    <div class="chart-container">
+                    <div class="simple-chart">
                         <div class="chart-title">🕸️ Мрежова Диаграма на Връзки</div>
-                        <button class="refresh-network-btn" onclick="refreshNetworkDiagram()">🔄 Презареди диаграмата</button>
                         <div id="networkDiagram" class="network-container">
-                            <div style="text-align: center; padding-top: 200px; color: #666;">
+                            <div style="text-align: center; padding-top: 150px; color: #666;">
                                 Мрежовата диаграма ще се покаже след анализ...
                             </div>
                         </div>
@@ -508,10 +528,10 @@
 
         // Authentication
         function checkAuth() {
-            const username = document.getElementById('username').value;
+            const email = document.getElementById('email').value;
             const password = document.getElementById('password').value;
             
-            if (username === 'admin' && password === 'admin123') {
+            if (email === 'stoicdaniela@gmail.com' && password === 'admin123') {
                 return true;
             }
             return false;
@@ -520,7 +540,7 @@
         function login() {
             if (checkAuth()) {
                 document.getElementById('login-screen').style.display = 'none';
-                document.getElementById('main-app').style.display = 'block';
+                document.getElementById('main-app').classList.add('show');
                 isLoggedIn = true;
                 showStatus('success', 'Успешно влизане!');
             } else {
@@ -530,12 +550,8 @@
 
         function logout() {
             document.getElementById('login-screen').style.display = 'flex';
-            document.getElementById('main-app').style.display = 'none';
+            document.getElementById('main-app').classList.remove('show');
             isLoggedIn = false;
-            
-            // Reset form
-            document.getElementById('username').value = '';
-            document.getElementById('password').value = '';
         }
 
         // Login form handler
@@ -544,7 +560,7 @@
             login();
         });
 
-        // File handling with XLSX support
+        // File handling (CSV only for stability)
         function setupFileHandling() {
             const fileInput = document.getElementById('file-input');
             const uploadArea = document.getElementById('upload-area');
@@ -599,30 +615,8 @@
                     }
                 };
                 reader.readAsText(file);
-            } else if (file.name.endsWith('.xlsx')) {
-                const reader = new FileReader();
-                reader.onload = function(e) {
-                    try {
-                        const data = new Uint8Array(e.target.result);
-                        const workbook = XLSX.read(data, { type: 'array' });
-                        
-                        // Get the first worksheet
-                        const worksheetName = workbook.SheetNames[0];
-                        const worksheet = workbook.Sheets[worksheetName];
-                        
-                        // Convert to CSV format
-                        const csvContent = XLSX.utils.sheet_to_csv(worksheet);
-                        currentData = parseCSV(csvContent);
-                        
-                        showStatus('success', `XLSX файлът е зареден успешно! Намерени са ${currentData.length} записа от лист "${worksheetName}".`);
-                        enableAnalysisButtons();
-                    } catch (error) {
-                        showStatus('error', 'Грешка при четенето на XLSX файла: ' + error.message);
-                    }
-                };
-                reader.readAsArrayBuffer(file);
             } else {
-                showStatus('error', 'Неподдържан файлов формат. Моля, използвайте CSV или XLSX файлове.');
+                showStatus('error', 'Моля, използвайте CSV файлове за тази стабилна версия.');
             }
         }
 
@@ -805,130 +799,58 @@
             resultsDiv.style.display = 'block';
 
             // Create visualizations
-            createVisualizationsFromResults(combinations);
+            createSimpleVisualizationsFromResults(combinations);
         }
 
-        function createVisualizationsFromResults(combinations) {
+        function createSimpleVisualizationsFromResults(combinations) {
             if (combinations.length === 0) return;
 
             document.getElementById('charts-container').style.display = 'block';
             document.getElementById('no-visualization').style.display = 'none';
 
-            // Create Bar Chart
-            createBarChart(combinations);
-            
-            // Create Pie Chart
-            createPieChart(combinations);
+            // Create Simple Bar Chart
+            createSimpleBarChart(combinations);
             
             // Create Network Diagram
-            createNetworkDiagram(combinations);
+            createSimpleNetworkDiagram(combinations);
         }
 
-        function createBarChart(combinations) {
-            const ctx = document.getElementById('barChart').getContext('2d');
-            
-            const labels = combinations.slice(0, 8).map(([combo, count]) => combo);
-            const data = combinations.slice(0, 8).map(([combo, count]) => count);
+        function createSimpleBarChart(combinations) {
+            const chartContainer = document.getElementById('simpleBarChart');
+            chartContainer.innerHTML = '';
 
-            new Chart(ctx, {
-                type: 'bar',
-                data: {
-                    labels: labels,
-                    datasets: [{
-                        label: 'Брой срещания',
-                        data: data,
-                        backgroundColor: 'rgba(102, 126, 234, 0.8)',
-                        borderColor: 'rgba(102, 126, 234, 1)',
-                        borderWidth: 1
-                    }]
-                },
-                options: {
-                    responsive: true,
-                    maintainAspectRatio: false,
-                    scales: {
-                        y: {
-                            beginAtZero: true,
-                            title: {
-                                display: true,
-                                text: 'Брой срещания'
-                            }
-                        },
-                        x: {
-                            title: {
-                                display: true,
-                                text: 'Комбинации от продукти'
-                            }
-                        }
-                    },
-                    plugins: {
-                        legend: {
-                            display: false
-                        },
-                        title: {
-                            display: true,
-                            text: 'Най-често срещани комбинации'
-                        }
-                    }
-                }
+            const maxCount = Math.max(...combinations.map(([combo, count]) => count));
+            const chartData = combinations.slice(0, 6); // Top 6 for better display
+
+            chartData.forEach(([combo, count]) => {
+                const bar = document.createElement('div');
+                bar.className = 'bar';
+                const height = (count / maxCount) * 150; // Max height 150px
+                bar.style.height = height + 'px';
+                
+                const label = document.createElement('div');
+                label.className = 'bar-label';
+                label.textContent = combo.length > 20 ? combo.substring(0, 17) + '...' : combo;
+                
+                const value = document.createElement('div');
+                value.className = 'bar-value';
+                value.textContent = count;
+                
+                bar.appendChild(label);
+                bar.appendChild(value);
+                chartContainer.appendChild(bar);
             });
         }
 
-        function createPieChart(combinations) {
-            const ctx = document.getElementById('pieChart').getContext('2d');
-            
-            const labels = combinations.slice(0, 6).map(([combo, count]) => combo);
-            const data = combinations.slice(0, 6).map(([combo, count]) => count);
-            
-            const colors = [
-                'rgba(102, 126, 234, 0.8)',
-                'rgba(118, 75, 162, 0.8)',
-                'rgba(40, 167, 69, 0.8)',
-                'rgba(255, 193, 7, 0.8)',
-                'rgba(220, 53, 69, 0.8)',
-                'rgba(23, 162, 184, 0.8)'
-            ];
-
-            new Chart(ctx, {
-                type: 'pie',
-                data: {
-                    labels: labels,
-                    datasets: [{
-                        data: data,
-                        backgroundColor: colors,
-                        borderColor: colors.map(color => color.replace('0.8', '1')),
-                        borderWidth: 2
-                    }]
-                },
-                options: {
-                    responsive: true,
-                    maintainAspectRatio: false,
-                    plugins: {
-                        legend: {
-                            position: 'bottom',
-                            labels: {
-                                padding: 20,
-                                usePointStyle: true
-                            }
-                        },
-                        title: {
-                            display: true,
-                            text: 'Разпределение на топ комбинациите'
-                        }
-                    }
-                }
-            });
-        }
-
-        function createNetworkDiagram(combinations) {
+        function createSimpleNetworkDiagram(combinations) {
             const networkContainer = document.getElementById('networkDiagram');
-            networkContainer.innerHTML = ''; // Clear existing content
+            networkContainer.innerHTML = '';
 
             if (combinations.length === 0) {
-                networkContainer.innerHTML = '<div style="text-align: center; padding-top: 200px; color: #666;">Няма комбинации за показване в мрежовата диаграма</div>';
+                networkContainer.innerHTML = '<div style="text-align: center; padding-top: 150px; color: #666;">Няма комбинации за показване</div>';
                 return;
             }
 
-            // Extract unique products from combinations
             const products = new Set();
             const connections = new Map();
 
@@ -943,43 +865,34 @@
 
             const productArray = Array.from(products);
             
-            // Wait for container to be visible and get actual dimensions
             setTimeout(() => {
-                const containerWidth = networkContainer.offsetWidth || 600;
-                const containerHeight = networkContainer.offsetHeight || 500;
+                const containerWidth = networkContainer.offsetWidth || 500;
+                const containerHeight = networkContainer.offsetHeight || 400;
 
-                // Ensure we have valid dimensions
-                if (containerWidth <= 0 || containerHeight <= 0) {
-                    networkContainer.innerHTML = '<div style="text-align: center; padding-top: 200px; color: #666;">Зареждане на диаграмата...</div>';
-                    return;
-                }
-
-                // Position products in a circle with margins
-                const margin = 60;
+                const margin = 50;
                 const centerX = containerWidth / 2;
                 const centerY = containerHeight / 2;
                 const radius = Math.min(containerWidth - margin * 2, containerHeight - margin * 2) * 0.35;
 
-                // Create nodes with better positioning
+                // Create nodes
                 productArray.forEach((product, index) => {
                     const angle = (index / productArray.length) * 2 * Math.PI;
-                    const x = centerX + radius * Math.cos(angle) - 60; // Node width ~120px, so center at 60px
-                    const y = centerY + radius * Math.sin(angle) - 15; // Node height ~30px, so center at 15px
+                    const x = centerX + radius * Math.cos(angle) - 60;
+                    const y = centerY + radius * Math.sin(angle) - 15;
 
                     const node = document.createElement('div');
                     node.className = 'network-node';
-                    node.textContent = product;
+                    node.textContent = product.length > 15 ? product.substring(0, 12) + '...' : product;
                     node.style.left = Math.max(5, Math.min(containerWidth - 125, x)) + 'px';
                     node.style.top = Math.max(5, Math.min(containerHeight - 35, y)) + 'px';
                     node.setAttribute('data-product', product);
-                    node.title = product; // Tooltip for long product names
+                    node.title = product;
                     
                     networkContainer.appendChild(node);
                 });
 
-                // Small delay to ensure nodes are positioned
+                // Create connections
                 setTimeout(() => {
-                    // Create connections (lines)
                     connections.forEach((count, key) => {
                         const [product1, product2] = key.split('-');
                         const node1 = networkContainer.querySelector(`[data-product="${product1}"]`);
@@ -1001,24 +914,18 @@
                             const line = document.createElement('div');
                             line.className = 'network-line';
                             line.style.width = length + 'px';
-                            line.style.height = Math.max(2, Math.min(8, count)) + 'px'; // Line thickness based on frequency
+                            line.style.height = Math.max(2, Math.min(6, count)) + 'px';
                             line.style.left = x1 + 'px';
                             line.style.top = y1 + 'px';
                             line.style.transform = `rotate(${angle}deg)`;
-                            line.style.opacity = Math.min(0.8, count / 10); // Opacity based on frequency
+                            line.style.opacity = Math.min(0.7, count / 8);
                             line.title = `${product1} + ${product2}: ${count} пъти`;
 
                             networkContainer.appendChild(line);
                         }
                     });
                 }, 100);
-            }, 100);
-        }
-
-        function refreshNetworkDiagram() {
-            if (currentAnalysisResults && currentAnalysisResults.length > 0) {
-                createNetworkDiagram(currentAnalysisResults);
-            }
+            }, 200);
         }
 
         function showTab(tabName) {
@@ -1032,7 +939,7 @@
             
             // Refresh network diagram if switching to visualization tab
             if (tabName === 'visualization' && currentAnalysisResults) {
-                setTimeout(() => refreshNetworkDiagram(), 200);
+                setTimeout(() => createSimpleNetworkDiagram(currentAnalysisResults), 300);
             }
         }
 
@@ -1051,11 +958,9 @@
 
         // Initialize the application
         document.addEventListener('DOMContentLoaded', function() {
+            console.log('BI App Loading...');
             setupFileHandling();
-            
-            // Show login screen
-            document.getElementById('login-screen').style.display = 'flex';
-            document.getElementById('main-app').style.display = 'none';
+            console.log('BI App Ready!');
         });
     </script>
 </body>
