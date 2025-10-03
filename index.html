@@ -389,12 +389,44 @@
             box-shadow: 0 1px 3px rgba(0,0,0,0.2);
         }
 
-        .network-line.strength-1 { background: linear-gradient(90deg, #ff6b6b, #ee5a52); }
-        .network-line.strength-2 { background: linear-gradient(90deg, #4ecdc4, #44a08d); }
-        .network-line.strength-3 { background: linear-gradient(90deg, #45b7d1, #96c93d); }
-        .network-line.strength-4 { background: linear-gradient(90deg, #f9ca24, #f0932b); }
-        .network-line.strength-5 { background: linear-gradient(90deg, #eb4d4b, #6639b6); }
-        .network-line.strength-6 { background: linear-gradient(90deg, #a55eea, #26de81); }
+        .network-line.strength-1 { background: #ff6b6b; } /* Червено - най-слаби връзки */
+        .network-line.strength-2 { background: #ffa500; } /* Оранжево - слаби връзки */
+        .network-line.strength-3 { background: #ffeb3b; } /* Жълто - средни връзки */
+        .network-line.strength-4 { background: #4caf50; } /* Зелено - силни връзки */
+        .network-line.strength-5 { background: #2196f3; } /* Синьо - много силни връзки */
+        .network-line.strength-6 { background: #9c27b0; } /* Лилаво - най-силни връзки */
+
+        .color-legend {
+            background: white;
+            padding: 15px;
+            border-radius: 8px;
+            margin-top: 15px;
+            box-shadow: 0 2px 5px rgba(0,0,0,0.1);
+        }
+
+        .legend-title {
+            font-weight: bold;
+            margin-bottom: 10px;
+            color: #333;
+        }
+
+        .legend-item {
+            display: flex;
+            align-items: center;
+            margin: 5px 0;
+        }
+
+        .legend-color {
+            width: 20px;
+            height: 4px;
+            margin-right: 10px;
+            border-radius: 2px;
+        }
+
+        .legend-text {
+            font-size: 14px;
+            color: #666;
+        }
 
         @media (max-width: 768px) {
             .container {
@@ -468,11 +500,15 @@
                 </div>
             </div>
 
-            <!-- Analysis Tab -->
+            // Analysis Tab
             <div id="analysis-tab" class="tab-content">
                 <h2>Статистически анализ</h2>
-                <p>Тук ще се покажат резултати от анализа на данните</p>
-                <div id="analysis-results"></div>
+                <p>Основни статистики за заредените данни</p>
+                <div id="analysis-results">
+                    <div style="text-align: center; padding: 50px; color: #666;">
+                        Първо заредете данни за да видите статистическия анализ
+                    </div>
+                </div>
             </div>
 
             <!-- Market Basket Tab -->
@@ -515,6 +551,34 @@
                         <div id="networkDiagram" class="network-container">
                             <div style="text-align: center; padding-top: 150px; color: #666;">
                                 Мрежовата диаграма ще се покаже след анализ...
+                            </div>
+                        </div>
+                        <!-- Color Legend -->
+                        <div class="color-legend">
+                            <div class="legend-title">🎨 Легенда за силата на връзките:</div>
+                            <div class="legend-item">
+                                <div class="legend-color" style="background: #ff6b6b;"></div>
+                                <div class="legend-text">🔴 Най-слаби връзки (1-2 срещания)</div>
+                            </div>
+                            <div class="legend-item">
+                                <div class="legend-color" style="background: #ffa500;"></div>
+                                <div class="legend-text">🟠 Слаби връзки (3-4 срещания)</div>
+                            </div>
+                            <div class="legend-item">
+                                <div class="legend-color" style="background: #ffeb3b;"></div>
+                                <div class="legend-text">🟡 Средни връзки (5-6 срещания)</div>
+                            </div>
+                            <div class="legend-item">
+                                <div class="legend-color" style="background: #4caf50;"></div>
+                                <div class="legend-text">🟢 Силни връзки (7-8 срещания)</div>
+                            </div>
+                            <div class="legend-item">
+                                <div class="legend-color" style="background: #2196f3;"></div>
+                                <div class="legend-text">🔵 Много силни връзки (9-10 срещания)</div>
+                            </div>
+                            <div class="legend-item">
+                                <div class="legend-color" style="background: #9c27b0;"></div>
+                                <div class="legend-text">🟣 Най-силни връзки (11+ срещания)</div>
                             </div>
                         </div>
                     </div>
@@ -652,6 +716,53 @@
 
         function enableAnalysisButtons() {
             document.getElementById('market-basket-btn').disabled = false;
+            
+            // Update Analysis tab with basic statistics
+            updateBasicAnalysis();
+        }
+
+        function updateBasicAnalysis() {
+            if (!currentData || currentData.length === 0) return;
+
+            const headers = Object.keys(currentData[0]);
+            const totalRecords = currentData.length;
+            
+            // Find unique values per column
+            const columnStats = {};
+            headers.forEach(header => {
+                const uniqueValues = new Set(currentData.map(row => row[header]).filter(val => val && val.trim()));
+                columnStats[header] = uniqueValues.size;
+            });
+
+            // Create analysis HTML
+            let analysisHTML = `
+                <div class="stats-grid">
+                    <div class="stat-card">
+                        <div class="stat-number">${totalRecords}</div>
+                        <div class="stat-label">Общо записи</div>
+                    </div>
+                    <div class="stat-card">
+                        <div class="stat-number">${headers.length}</div>
+                        <div class="stat-label">Колони в данните</div>
+                    </div>
+                </div>
+                
+                <h4>📊 Статистика по колони:</h4>
+                <div class="stats-grid">
+            `;
+
+            Object.entries(columnStats).forEach(([column, uniqueCount]) => {
+                analysisHTML += `
+                    <div class="stat-card">
+                        <div class="stat-number">${uniqueCount}</div>
+                        <div class="stat-label">${column}</div>
+                    </div>
+                `;
+            });
+
+            analysisHTML += `</div>`;
+
+            document.getElementById('analysis-results').innerHTML = analysisHTML;
         }
 
         // Market Basket Analysis
@@ -826,14 +937,25 @@
             const chartContainer = document.getElementById('simpleBarChart');
             chartContainer.innerHTML = '';
 
+            if (combinations.length === 0) {
+                chartContainer.innerHTML = '<div style="text-align: center; width: 100%; padding: 50px; color: #666;">Няма данни за показване</div>';
+                return;
+            }
+
             const maxCount = Math.max(...combinations.map(([combo, count]) => count));
             const chartData = combinations.slice(0, 6); // Top 6 for better display
 
-            chartData.forEach(([combo, count]) => {
+            // Create colorful bars with different colors
+            const colors = [
+                '#667eea', '#764ba2', '#4ecdc4', '#45b7d1', '#f9ca24', '#eb4d4b'
+            ];
+
+            chartData.forEach(([combo, count], index) => {
                 const bar = document.createElement('div');
                 bar.className = 'bar';
                 const height = (count / maxCount) * 150; // Max height 150px
                 bar.style.height = height + 'px';
+                bar.style.background = `linear-gradient(135deg, ${colors[index % colors.length]}, ${colors[(index + 1) % colors.length]})`;
                 
                 const label = document.createElement('div');
                 label.className = 'bar-label';
@@ -842,6 +964,8 @@
                 const value = document.createElement('div');
                 value.className = 'bar-value';
                 value.textContent = count;
+                value.style.color = colors[index % colors.length];
+                value.style.fontWeight = 'bold';
                 
                 bar.appendChild(label);
                 bar.appendChild(value);
@@ -900,8 +1024,10 @@
 
                 // Create connections
                 setTimeout(() => {
-                    // First, find max count for color scaling
-                    const maxCount = Math.max(...Array.from(connections.values()));
+                    // Improved color distribution algorithm
+                    const countValues = Array.from(connections.values()).sort((a, b) => b - a);
+                    const maxCount = countValues[0] || 1;
+                    const minCount = countValues[countValues.length - 1] || 1;
                     
                     connections.forEach((count, key) => {
                         const [product1, product2] = key.split('-');
@@ -921,17 +1047,23 @@
                             const length = Math.sqrt((x2 - x1) ** 2 + (y2 - y1) ** 2);
                             const angle = Math.atan2(y2 - y1, x2 - x1) * 180 / Math.PI;
 
-                            // Determine color strength based on count
-                            const strengthLevel = Math.min(6, Math.max(1, Math.ceil((count / maxCount) * 6)));
+                            // Better strength distribution based on actual count ranges
+                            let strengthLevel;
+                            if (maxCount === minCount) {
+                                strengthLevel = 3; // All same, use middle
+                            } else {
+                                const normalized = (count - minCount) / (maxCount - minCount);
+                                strengthLevel = Math.ceil(normalized * 6) || 1;
+                            }
 
                             const line = document.createElement('div');
                             line.className = `network-line strength-${strengthLevel}`;
                             line.style.width = length + 'px';
-                            line.style.height = Math.max(3, Math.min(8, count + 2)) + 'px'; // Slightly thicker lines
+                            line.style.height = Math.max(3, Math.min(8, strengthLevel + 1)) + 'px';
                             line.style.left = x1 + 'px';
                             line.style.top = y1 + 'px';
                             line.style.transform = `rotate(${angle}deg)`;
-                            line.style.opacity = Math.min(0.9, 0.4 + (count / maxCount) * 0.5); // Better opacity range
+                            line.style.opacity = Math.min(0.9, 0.5 + (strengthLevel / 6) * 0.4);
                             line.title = `${product1} + ${product2}: ${count} пъти (сила: ${strengthLevel}/6)`;
 
                             networkContainer.appendChild(line);
