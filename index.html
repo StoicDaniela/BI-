@@ -13,7 +13,7 @@
 
         body {
             font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
-            background: linear-gradient(135deg, #667eea 0%, #0D8BB1 100%);
+            background: linear-gradient(135deg, #0D8BB1 0%, #4A90A4 100%);
             min-height: 100vh;
         }
 
@@ -67,13 +67,13 @@
 
         .form-group input:focus {
             outline: none;
-            border-color: #667eea;
+            border-color: #0D8BB1;
         }
 
         .login-btn {
             width: 100%;
             padding: 12px;
-            background: linear-gradient(135deg, #667eea 0%, #0D8BB1 100%);
+            background: linear-gradient(135deg, #0D8BB1 0%, #4A90A4 100%);
             color: white;
             border: none;
             border-radius: 5px;
@@ -152,7 +152,7 @@
         }
 
         .tab-btn.active {
-            background: linear-gradient(135deg, #667eea 0%, #0D8BB1 100%);
+            background: linear-gradient(135deg, #0D8BB1 0%, #4A90A4 100%);
             color: white;
             transform: translateY(-2px);
             box-shadow: 0 5px 15px rgba(102, 126, 234, 0.4);
@@ -160,7 +160,7 @@
 
         .tab-btn:hover:not(.active) {
             background: #f8f9ff;
-            color: #667eea;
+            color: #0D8BB1;
         }
 
         .tab-content {
@@ -204,12 +204,12 @@
         }
 
         .upload-area:hover {
-            border-color: #667eea;
+            border-color: #0D8BB1;
             background: #f8f9ff;
         }
 
         .upload-area.dragover {
-            border-color: #667eea;
+            border-color: #0D8BB1;
             background: #f0f8ff;
             transform: scale(1.02);
         }
@@ -231,7 +231,7 @@
         }
 
         .upload-btn {
-            background: linear-gradient(135deg, #667eea 0%, #0D8BB1 100%);
+            background: linear-gradient(135deg, #0D8BB1 0%, #4A90A4 100%);
             color: white;
             border: none;
             padding: 15px 30px;
@@ -272,7 +272,7 @@
         }
 
         .module-btn {
-            background: linear-gradient(135deg, #667eea 0%, #0D8BB1 100%);
+            background: linear-gradient(135deg, #0D8BB1 0%, #4A90A4 100%);
             color: white;
             border: none;
             padding: 15px 30px;
@@ -314,7 +314,7 @@
             background: #f8f9ff;
             padding: 20px;
             border-radius: 10px;
-            border-left: 5px solid #667eea;
+            border-left: 5px solid #0D8BB1;
         }
 
         .combinations-list h4 {
@@ -345,7 +345,7 @@
         }
 
         .stat-card {
-            background: linear-gradient(135deg, #667eea 0%, #0D8BB1 100%);
+            background: linear-gradient(135deg, #0D8BB1 0%, #4A90A4 100%);
             color: white;
             padding: 20px;
             border-radius: 10px;
@@ -421,7 +421,7 @@
 
         .bar-value {
             font-weight: bold;
-            color: #667eea;
+            color: #0D8BB1;
             min-width: 60px;
             text-align: right;
         }
@@ -1029,7 +1029,7 @@
             `;
             
             const maxCount = Math.max(...combinations.map(([combo, count]) => count));
-            const colors = ['#0D8BB1', '#667eea', '#f093fb', '#f5576c', '#4facfe', '#00f2fe'];
+            const colors = ['#0D8BB1', '#4A90A4', '#f093fb', '#f5576c', '#4facfe', '#00f2fe'];
             
             combinations.slice(0, 6).forEach(([combo, count], index) => {
                 const confidence = ((count / totalTransactions) * 100).toFixed(1);
@@ -1077,7 +1077,7 @@
         function createSimpleBarChart(combinations) {
             const container = document.getElementById('simpleBarChart');
             const maxValue = Math.max(...combinations.map(([combo, count]) => count));
-            const colors = ['#0D8BB1', '#667eea', '#f093fb', '#f5576c', '#4facfe', '#00f2fe', '#a8e6cf', '#ffd93d'];
+            const colors = ['#0D8BB1', '#4A90A4', '#f093fb', '#f5576c', '#4facfe', '#00f2fe', '#a8e6cf', '#ffd93d'];
             
             let html = '';
             combinations.slice(0, 8).forEach(([combo, count], index) => {
@@ -1169,7 +1169,7 @@
                 ctx.arc(node.x, node.y, 25, 0, 2 * Math.PI);
                 ctx.fillStyle = '#ffffff';
                 ctx.fill();
-                ctx.strokeStyle = '#667eea';
+                ctx.strokeStyle = '#0D8BB1';
                 ctx.lineWidth = 3;
                 ctx.stroke();
                 
