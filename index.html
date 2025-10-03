@@ -51,8 +51,8 @@
 
         .form-group label {
             display: block;
-            margin-bottom: 8px;
-            color: #555;
+            margin-bottom: 5px;
+            color: #333;
             font-weight: 500;
         }
 
@@ -62,7 +62,7 @@
             border: 2px solid #ddd;
             border-radius: 5px;
             font-size: 16px;
-            transition: border-color 0.3s;
+            transition: border-color 0.3s ease;
         }
 
         .form-group input:focus {
@@ -79,7 +79,7 @@
             border-radius: 5px;
             font-size: 16px;
             cursor: pointer;
-            transition: transform 0.2s;
+            transition: transform 0.3s ease;
         }
 
         .login-btn:hover {
@@ -90,16 +90,31 @@
             display: none;
         }
 
-        .main-app.show {
-            display: block;
-        }
-
         .header {
             background: white;
-            padding: 20px;
+            padding: 30px;
             border-radius: 10px;
-            margin-bottom: 20px;
-            box-shadow: 0 2px 10px rgba(0, 0, 0, 0.1);
+            text-align: center;
+            margin-bottom: 30px;
+            box-shadow: 0 5px 15px rgba(0, 0, 0, 0.1);
+            position: relative;
+        }
+
+        .logout-btn {
+            position: absolute;
+            top: 20px;
+            right: 20px;
+            background: #ff6b6b;
+            color: white;
+            border: none;
+            padding: 8px 16px;
+            border-radius: 5px;
+            cursor: pointer;
+            font-size: 14px;
+        }
+
+        .logout-btn:hover {
+            background: #ff5252;
         }
 
         .header h1 {
@@ -109,31 +124,43 @@
 
         .header p {
             color: #666;
+            font-size: 16px;
         }
 
         .nav-tabs {
             display: flex;
+            justify-content: center;
+            margin-bottom: 30px;
             background: white;
             border-radius: 10px;
-            padding: 5px;
-            margin-bottom: 20px;
-            box-shadow: 0 2px 10px rgba(0, 0, 0, 0.1);
+            padding: 10px;
+            box-shadow: 0 5px 15px rgba(0, 0, 0, 0.1);
+            flex-wrap: wrap;
         }
 
         .tab-btn {
-            flex: 1;
-            padding: 12px 20px;
-            border: none;
             background: transparent;
+            border: none;
+            padding: 15px 25px;
+            margin: 5px;
             border-radius: 8px;
             cursor: pointer;
-            transition: all 0.3s;
+            font-size: 16px;
             font-weight: 500;
+            transition: all 0.3s ease;
+            color: #666;
         }
 
         .tab-btn.active {
             background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
             color: white;
+            transform: translateY(-2px);
+            box-shadow: 0 5px 15px rgba(102, 126, 234, 0.4);
+        }
+
+        .tab-btn:hover:not(.active) {
+            background: #f8f9ff;
+            color: #667eea;
         }
 
         .tab-content {
@@ -141,24 +168,38 @@
             background: white;
             padding: 30px;
             border-radius: 10px;
-            box-shadow: 0 2px 10px rgba(0, 0, 0, 0.1);
+            box-shadow: 0 5px 15px rgba(0, 0, 0, 0.1);
+            min-height: 400px;
         }
 
         .tab-content.active {
             display: block;
         }
 
-        .upload-section {
+        .tab-content h2 {
+            color: #333;
+            margin-bottom: 20px;
             text-align: center;
+        }
+
+        .tab-content p {
+            color: #666;
             margin-bottom: 30px;
+            text-align: center;
+            font-size: 16px;
+        }
+
+        .upload-section {
+            max-width: 600px;
+            margin: 0 auto;
         }
 
         .upload-area {
             border: 3px dashed #ddd;
             border-radius: 10px;
-            padding: 40px;
-            margin-bottom: 20px;
-            transition: all 0.3s;
+            padding: 50px 30px;
+            text-align: center;
+            transition: all 0.3s ease;
             cursor: pointer;
         }
 
@@ -170,6 +211,19 @@
         .upload-area.dragover {
             border-color: #667eea;
             background: #f0f8ff;
+            transform: scale(1.02);
+        }
+
+        .upload-area h3 {
+            color: #333;
+            margin-bottom: 15px;
+            font-size: 24px;
+        }
+
+        .upload-area p {
+            color: #666;
+            margin-bottom: 25px;
+            font-size: 16px;
         }
 
         .file-input {
@@ -179,12 +233,13 @@
         .upload-btn {
             background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
             color: white;
-            padding: 12px 24px;
             border: none;
-            border-radius: 5px;
-            cursor: pointer;
+            padding: 15px 30px;
+            border-radius: 8px;
             font-size: 16px;
-            transition: transform 0.2s;
+            font-weight: 500;
+            cursor: pointer;
+            transition: transform 0.3s ease;
         }
 
         .upload-btn:hover {
@@ -192,240 +247,242 @@
         }
 
         .status-message {
+            margin-top: 20px;
             padding: 15px;
-            border-radius: 5px;
-            margin-top: 15px;
-            display: none;
+            border-radius: 8px;
+            text-align: center;
+            font-weight: 500;
         }
 
-        .status-success {
+        .status-message.success {
             background: #d4edda;
             color: #155724;
             border: 1px solid #c3e6cb;
         }
 
-        .status-error {
+        .status-message.error {
             background: #f8d7da;
             color: #721c24;
             border: 1px solid #f5c6cb;
         }
 
-        .status-info {
-            background: #d1ecf1;
-            color: #0c5460;
-            border: 1px solid #bee5eb;
-        }
-
         .analysis-section {
-            margin-top: 30px;
+            margin: 30px 0;
+            text-align: center;
         }
 
         .module-btn {
-            background: linear-gradient(135deg, #28a745 0%, #20c997 100%);
+            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
             color: white;
-            padding: 15px 30px;
             border: none;
+            padding: 15px 30px;
             border-radius: 8px;
-            cursor: pointer;
             font-size: 16px;
             font-weight: 500;
-            transition: all 0.3s;
+            cursor: pointer;
+            transition: all 0.3s ease;
             margin: 10px;
-            min-width: 200px;
         }
 
-        .module-btn:hover {
-            transform: translateY(-3px);
-            box-shadow: 0 5px 15px rgba(40, 167, 69, 0.4);
+        .module-btn:hover:not(:disabled) {
+            transform: translateY(-2px);
+            box-shadow: 0 5px 15px rgba(102, 126, 234, 0.4);
         }
 
         .module-btn:disabled {
-            background: #6c757d;
+            background: #ccc;
             cursor: not-allowed;
             transform: none;
-            box-shadow: none;
         }
 
-        .results-container {
+        .results-section {
             margin-top: 30px;
-            padding: 20px;
-            background: #f8f9fa;
-            border-radius: 8px;
+            display: none;
         }
 
-        .stats-grid {
+        .results-header {
+            text-align: center;
+            margin-bottom: 20px;
+        }
+
+        .results-header h3 {
+            color: #333;
+            margin-bottom: 10px;
+        }
+
+        .combinations-list {
+            background: #f8f9ff;
+            padding: 20px;
+            border-radius: 10px;
+            border-left: 5px solid #667eea;
+        }
+
+        .combinations-list h4 {
+            color: #333;
+            margin-bottom: 15px;
+        }
+
+        .combinations-list ul {
+            list-style-type: none;
+            padding: 0;
+        }
+
+        .combinations-list li {
+            padding: 10px 0;
+            border-bottom: 1px solid #eee;
+            color: #555;
+        }
+
+        .combinations-list li:last-child {
+            border-bottom: none;
+        }
+
+        .stat-cards {
             display: grid;
             grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));
-            gap: 15px;
+            gap: 20px;
             margin: 20px 0;
         }
 
         .stat-card {
-            background: white;
+            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+            color: white;
             padding: 20px;
-            border-radius: 8px;
+            border-radius: 10px;
             text-align: center;
-            box-shadow: 0 2px 5px rgba(0,0,0,0.1);
+            box-shadow: 0 5px 15px rgba(102, 126, 234, 0.3);
         }
 
         .stat-number {
-            font-size: 24px;
+            font-size: 32px;
             font-weight: bold;
-            color: #667eea;
+            margin-bottom: 5px;
         }
 
         .stat-label {
-            color: #666;
-            margin-top: 5px;
-        }
-
-        .logout-btn {
-            background: #dc3545;
-            color: white;
-            padding: 8px 16px;
-            border: none;
-            border-radius: 5px;
-            cursor: pointer;
-            float: right;
-        }
-
-        .logout-btn:hover {
-            background: #c82333;
+            font-size: 14px;
+            opacity: 0.9;
         }
 
         .simple-chart {
+            background: white;
             margin: 20px 0;
             padding: 20px;
-            background: white;
-            border-radius: 8px;
-            box-shadow: 0 2px 5px rgba(0,0,0,0.1);
+            border-radius: 10px;
+            box-shadow: 0 5px 15px rgba(0, 0, 0, 0.1);
         }
 
         .chart-title {
             font-size: 18px;
             font-weight: bold;
-            margin-bottom: 15px;
             color: #333;
+            margin-bottom: 15px;
             text-align: center;
         }
 
         .bar-chart {
-            display: flex;
-            align-items: end;
-            height: 200px;
-            border-bottom: 2px solid #ddd;
-            border-left: 2px solid #ddd;
-            padding: 10px;
-            margin: 20px 0;
+            max-width: 100%;
+            overflow-x: auto;
         }
 
-        .bar {
-            flex: 1;
-            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
-            margin: 0 2px;
-            border-radius: 4px 4px 0 0;
-            position: relative;
-            min-height: 20px;
+        .bar-item {
+            display: flex;
+            align-items: center;
+            margin: 10px 0;
+            padding: 10px;
+            background: #f8f9ff;
+            border-radius: 8px;
+            border-left: 5px solid var(--bar-color);
         }
 
         .bar-label {
-            position: absolute;
-            bottom: -25px;
-            left: 50%;
-            transform: translateX(-50%);
-            font-size: 10px;
-            color: #666;
-            white-space: nowrap;
+            flex: 1;
+            font-weight: 500;
+            color: #333;
+            margin-right: 15px;
+            min-width: 150px;
+        }
+
+        .bar-fill {
+            flex: 2;
+            height: 20px;
+            background: #f0f0f0;
+            border-radius: 10px;
+            overflow: hidden;
+            margin-right: 15px;
+        }
+
+        .bar-progress {
+            height: 100%;
+            background: var(--bar-color);
+            border-radius: 10px;
+            transition: width 0.5s ease;
         }
 
         .bar-value {
-            position: absolute;
-            top: -20px;
-            left: 50%;
-            transform: translateX(-50%);
-            font-size: 10px;
             font-weight: bold;
-            color: #333;
+            color: #667eea;
+            min-width: 60px;
+            text-align: right;
         }
 
         .network-container {
-            height: 400px;
-            border: 1px solid #ddd;
-            border-radius: 8px;
             position: relative;
-            overflow: hidden;
+            height: 400px;
+            border: 2px solid #eee;
+            border-radius: 10px;
             background: #fafafa;
-            margin: 20px 0;
-        }
-
-        .network-node {
-            position: absolute;
-            background: #667eea;
-            color: white;
-            padding: 8px 12px;
-            border-radius: 20px;
-            font-size: 12px;
-            font-weight: bold;
-            cursor: pointer;
-            transition: all 0.3s;
-            box-shadow: 0 2px 5px rgba(0,0,0,0.2);
-            white-space: nowrap;
-            max-width: 120px;
-            text-overflow: ellipsis;
             overflow: hidden;
         }
 
-        .network-node:hover {
-            background: #764ba2;
-            transform: scale(1.1);
-            z-index: 10;
+        .network-canvas {
+            width: 100%;
+            height: 100%;
+            cursor: grab;
         }
 
-        .network-line {
-            position: absolute;
-            transform-origin: left center;
-            pointer-events: none;
-            border-radius: 2px;
-            box-shadow: 0 1px 3px rgba(0,0,0,0.2);
+        .network-canvas:active {
+            cursor: grabbing;
         }
-
-        .network-line.strength-1 { background: #ff6b6b; } /* Червено - най-слаби връзки */
-        .network-line.strength-2 { background: #ffa500; } /* Оранжево - слаби връзки */
-        .network-line.strength-3 { background: #ffeb3b; } /* Жълто - средни връзки */
-        .network-line.strength-4 { background: #4caf50; } /* Зелено - силни връзки */
-        .network-line.strength-5 { background: #2196f3; } /* Синьо - много силни връзки */
-        .network-line.strength-6 { background: #9c27b0; } /* Лилаво - най-силни връзки */
 
         .color-legend {
-            background: white;
-            padding: 15px;
-            border-radius: 8px;
             margin-top: 15px;
-            box-shadow: 0 2px 5px rgba(0,0,0,0.1);
+            padding: 15px;
+            background: #f8f9ff;
+            border-radius: 8px;
+            border: 1px solid #e0e6ff;
         }
 
         .legend-title {
             font-weight: bold;
-            margin-bottom: 10px;
             color: #333;
+            margin-bottom: 10px;
+            text-align: center;
+        }
+
+        .legend-items {
+            display: flex;
+            flex-wrap: wrap;
+            justify-content: center;
+            gap: 15px;
         }
 
         .legend-item {
             display: flex;
             align-items: center;
-            margin: 5px 0;
+            gap: 8px;
         }
 
         .legend-color {
             width: 20px;
-            height: 4px;
-            margin-right: 10px;
-            border-radius: 2px;
+            height: 20px;
+            border-radius: 50%;
+            border: 2px solid rgba(0,0,0,0.1);
         }
 
         .legend-text {
             font-size: 14px;
-            color: #666;
+            color: #555;
         }
 
         @media (max-width: 768px) {
@@ -444,6 +501,90 @@
             .network-container {
                 height: 300px;
             }
+        }
+
+        /* Circular Progress Bars */
+        .combinations-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(280px, 1fr));
+            gap: 20px;
+            margin-top: 20px;
+        }
+
+        .combination-card {
+            background: white;
+            padding: 20px;
+            border-radius: 12px;
+            box-shadow: 0 4px 15px rgba(0, 0, 0, 0.1);
+            text-align: center;
+            transition: transform 0.3s ease;
+        }
+
+        .combination-card:hover {
+            transform: translateY(-5px);
+        }
+
+        .circular-progress {
+            position: relative;
+            width: 120px;
+            height: 120px;
+            margin: 0 auto 15px;
+        }
+
+        .progress-circle {
+            width: 100%;
+            height: 100%;
+            border-radius: 50%;
+            background: conic-gradient(
+                from 0deg,
+                var(--progress-color) var(--progress-percent),
+                #e0e0e0 var(--progress-percent)
+            );
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            position: relative;
+        }
+
+        .progress-circle::before {
+            content: '';
+            position: absolute;
+            top: 10px;
+            left: 10px;
+            right: 10px;
+            bottom: 10px;
+            background: white;
+            border-radius: 50%;
+        }
+
+        .progress-text {
+            position: relative;
+            z-index: 2;
+            font-size: 18px;
+            font-weight: bold;
+            color: #333;
+        }
+
+        .combination-title {
+            font-size: 16px;
+            font-weight: bold;
+            color: #333;
+            margin-bottom: 8px;
+        }
+
+        .combination-stats {
+            color: #666;
+            font-size: 14px;
+        }
+
+        .combinations-header {
+            text-align: center;
+            margin-bottom: 20px;
+        }
+
+        .combinations-header h4 {
+            color: #333;
+            margin-bottom: 10px;
         }
     </style>
 </head>
@@ -478,15 +619,17 @@
 
             <!-- Navigation Tabs -->
             <div class="nav-tabs">
-                <button class="tab-btn active" onclick="showTab('upload')">📁 Качване на данни</button>
-                <button class="tab-btn" onclick="showTab('analysis')">🔍 Анализ</button>
-                <button class="tab-btn" onclick="showTab('basket')">🛒 Пазарна Кошница</button>
-                <button class="tab-btn" onclick="showTab('visualization')">📊 Визуализация</button>
+                <button class="tab-btn active" onclick="showTab('upload-tab')">📂 Качване на данни</button>
+                <button class="tab-btn" onclick="showTab('analysis-tab')">🔍 Анализ</button>
+                <button class="tab-btn" onclick="showTab('basket-tab')">🛒 Пазарна кошница</button>
+                <button class="tab-btn" onclick="showTab('visualization-tab')">📊 Визуализация</button>
             </div>
 
             <!-- Upload Tab -->
             <div id="upload-tab" class="tab-content active">
-                <h2>Качване на файлове с данни</h2>
+                <h2>Качване на данни</h2>
+                <p>Заредете вашите данни за да започнете анализа</p>
+                
                 <div class="upload-section">
                     <div class="upload-area" id="upload-area">
                         <h3>📂 Избиране на файл</h3>
@@ -500,7 +643,7 @@
                 </div>
             </div>
 
-            // Analysis Tab
+            <!-- Analysis Tab -->
             <div id="analysis-tab" class="tab-content">
                 <h2>Статистически анализ</h2>
                 <p>Основни статистики за заредените данни</p>
@@ -521,17 +664,19 @@
                         🔍 Стартиране на Market Basket Analysis
                     </button>
                 </div>
-                
-                <div id="basket-results" class="results-container" style="display: none;">
-                    <h3>📈 Резултати от анализа</h3>
-                    <div id="basket-stats"></div>
-                    <div id="basket-combinations"></div>
+
+                <div id="market-basket-results" class="results-section">
+                    <div class="results-header">
+                        <h3>📊 Резултати от анализа</h3>
+                        <p>Най-популярни комбинации от продукти в транзакциите</p>
+                    </div>
+                    <div id="combinations-display" class="combinations-list"></div>
                 </div>
             </div>
 
             <!-- Visualization Tab -->
             <div id="visualization-tab" class="tab-content">
-                <h2>📊 Визуализация на резултатите</h2>
+                <h2>📈 Визуализация на данните</h2>
                 <p>Графично представяне на анализа от Пазарната Кошница</p>
                 
                 <div id="charts-container" style="display: none;">
@@ -556,36 +701,38 @@
                         <!-- Color Legend -->
                         <div class="color-legend">
                             <div class="legend-title">🎨 Легенда за силата на връзките:</div>
-                            <div class="legend-item">
-                                <div class="legend-color" style="background: #ff6b6b;"></div>
-                                <div class="legend-text">🔴 Най-слаби връзки (1-2 срещания)</div>
-                            </div>
-                            <div class="legend-item">
-                                <div class="legend-color" style="background: #ffa500;"></div>
-                                <div class="legend-text">🟠 Слаби връзки (3-4 срещания)</div>
-                            </div>
-                            <div class="legend-item">
-                                <div class="legend-color" style="background: #ffeb3b;"></div>
-                                <div class="legend-text">🟡 Средни връзки (5-6 срещания)</div>
-                            </div>
-                            <div class="legend-item">
-                                <div class="legend-color" style="background: #4caf50;"></div>
-                                <div class="legend-text">🟢 Силни връзки (7-8 срещания)</div>
-                            </div>
-                            <div class="legend-item">
-                                <div class="legend-color" style="background: #2196f3;"></div>
-                                <div class="legend-text">🔵 Много силни връзки (9-10 срещания)</div>
-                            </div>
-                            <div class="legend-item">
-                                <div class="legend-color" style="background: #9c27b0;"></div>
-                                <div class="legend-text">🟣 Най-силни връзки (11+ срещания)</div>
+                            <div class="legend-items">
+                                <div class="legend-item">
+                                    <div class="legend-color" style="background: #ff6b6b;"></div>
+                                    <div class="legend-text">Слаби връзки (3-4)</div>
+                                </div>
+                                <div class="legend-item">
+                                    <div class="legend-color" style="background: #ffa726;"></div>
+                                    <div class="legend-text">Умерени връзки (5-6)</div>
+                                </div>
+                                <div class="legend-item">
+                                    <div class="legend-color" style="background: #ffeb3b;"></div>
+                                    <div class="legend-text">Добри връзки (7-8)</div>
+                                </div>
+                                <div class="legend-item">
+                                    <div class="legend-color" style="background: #66bb6a;"></div>
+                                    <div class="legend-text">Силни връзки (9-10)</div>
+                                </div>
+                                <div class="legend-item">
+                                    <div class="legend-color" style="background: #42a5f5;"></div>
+                                    <div class="legend-text">Много силни връзки (11-12)</div>
+                                </div>
+                                <div class="legend-item">
+                                    <div class="legend-color" style="background: #ab47bc;"></div>
+                                    <div class="legend-text">Най-силни връзки (13+)</div>
+                                </div>
                             </div>
                         </div>
                     </div>
                 </div>
-
+                
                 <div id="no-visualization" style="text-align: center; padding: 50px; color: #666;">
-                    Първо изпълнете анализ на Пазарната Кошница за да видите графиките
+                    📈 Първо направете Market Basket Analysis за да видите визуализациите
                 </div>
             </div>
         </div>
@@ -593,310 +740,274 @@
 
     <script>
         // Global variables
-        let currentData = null;
-        let currentAnalysisResults = null;
-        let isLoggedIn = false;
+        let csvData = [];
+        let currentUser = null;
 
-        // Authentication
-        function checkAuth() {
-            const email = document.getElementById('email').value;
-            const password = document.getElementById('password').value;
-            
-            if (email === 'stoicdaniela@gmail.com' && password === 'admin123') {
-                return true;
-            }
-            return false;
-        }
-
-        function login() {
-            if (checkAuth()) {
-                document.getElementById('login-screen').style.display = 'none';
-                document.getElementById('main-app').classList.add('show');
-                isLoggedIn = true;
-                showStatus('success', 'Успешно влизане!');
-            } else {
-                showStatus('error', 'Грешно потребителско име или парола!');
-            }
-        }
-
-        function logout() {
-            document.getElementById('login-screen').style.display = 'flex';
-            document.getElementById('main-app').classList.remove('show');
-            isLoggedIn = false;
-        }
-
-        // Login form handler
+        // Login functionality
         document.getElementById('login-form').addEventListener('submit', function(e) {
             e.preventDefault();
-            login();
+            const email = document.getElementById('email').value;
+            const password = document.getElementById('password').value;
+
+            // Simple authentication (replace with real authentication)
+            if (email === 'stoicdaniela@gmail.com' && password === 'admin123') {
+                currentUser = { email: email };
+                document.getElementById('login-screen').style.display = 'none';
+                document.getElementById('main-app').style.display = 'block';
+            } else {
+                alert('Невалидни данни за вход!');
+            }
         });
 
-        // File handling (CSV only for stability)
-        function setupFileHandling() {
-            const fileInput = document.getElementById('file-input');
-            const uploadArea = document.getElementById('upload-area');
-
-            fileInput.addEventListener('change', handleFileSelect);
-            uploadArea.addEventListener('dragover', handleDragOver);
-            uploadArea.addEventListener('drop', handleDrop);
-            uploadArea.addEventListener('dragleave', handleDragLeave);
+        function logout() {
+            currentUser = null;
+            document.getElementById('login-screen').style.display = 'flex';
+            document.getElementById('main-app').style.display = 'none';
+            
+            // Reset application state
+            csvData = [];
+            document.getElementById('file-status').textContent = '';
+            document.getElementById('market-basket-btn').disabled = true;
+            document.getElementById('market-basket-results').style.display = 'none';
+            document.getElementById('charts-container').style.display = 'none';
+            document.getElementById('no-visualization').style.display = 'block';
+            showTab('upload-tab');
         }
+
+        // Tab functionality
+        function showTab(tabId) {
+            // Hide all tabs
+            const tabs = document.querySelectorAll('.tab-content');
+            tabs.forEach(tab => tab.classList.remove('active'));
+            
+            const buttons = document.querySelectorAll('.tab-btn');
+            buttons.forEach(btn => btn.classList.remove('active'));
+            
+            // Show selected tab
+            document.getElementById(tabId).classList.add('active');
+            event.target.classList.add('active');
+        }
+
+        // File upload functionality
+        const fileInput = document.getElementById('file-input');
+        const uploadArea = document.getElementById('upload-area');
+        const fileStatus = document.getElementById('file-status');
+
+        fileInput.addEventListener('change', handleFileSelect);
+
+        // Drag and drop functionality
+        uploadArea.addEventListener('dragover', function(e) {
+            e.preventDefault();
+            uploadArea.classList.add('dragover');
+        });
+
+        uploadArea.addEventListener('dragleave', function(e) {
+            e.preventDefault();
+            uploadArea.classList.remove('dragover');
+        });
+
+        uploadArea.addEventListener('drop', function(e) {
+            e.preventDefault();
+            uploadArea.classList.remove('dragover');
+            const files = e.dataTransfer.files;
+            if (files.length > 0) {
+                handleFileSelect({ target: { files: files } });
+            }
+        });
 
         function handleFileSelect(event) {
             const file = event.target.files[0];
-            if (file) {
-                handleFileUpload(file);
-            }
-        }
-
-        function handleDragOver(event) {
-            event.preventDefault();
-            event.currentTarget.classList.add('dragover');
-        }
-
-        function handleDrop(event) {
-            event.preventDefault();
-            event.currentTarget.classList.remove('dragover');
-            
-            const files = event.dataTransfer.files;
-            if (files.length > 0) {
-                handleFileUpload(files[0]);
-            }
-        }
-
-        function handleDragLeave(event) {
-            event.currentTarget.classList.remove('dragover');
-        }
-
-        function handleFileUpload(file) {
             if (!file) return;
 
-            showStatus('info', 'Обработка на файла...');
-
-            if (file.name.endsWith('.csv')) {
-                const reader = new FileReader();
-                reader.onload = function(e) {
-                    try {
-                        const csvContent = e.target.result;
-                        currentData = parseCSV(csvContent);
-                        showStatus('success', `CSV файлът е зареден успешно! Намерени са ${currentData.length} записа.`);
-                        enableAnalysisButtons();
-                    } catch (error) {
-                        showStatus('error', 'Грешка при четенето на CSV файла: ' + error.message);
-                    }
-                };
-                reader.readAsText(file);
-            } else {
-                showStatus('error', 'Моля, използвайте CSV файлове за тази стабилна версия.');
+            if (file.type !== 'text/csv' && !file.name.endsWith('.csv')) {
+                showStatus('Моля изберете CSV файл!', 'error');
+                return;
             }
+
+            const reader = new FileReader();
+            reader.onload = function(e) {
+                try {
+                    csvData = parseCSV(e.target.result);
+                    showStatus(`Успешно заредени ${csvData.length} реда данни!`, 'success');
+                    document.getElementById('market-basket-btn').disabled = false;
+                    
+                    // Update analysis tab with basic statistics
+                    updateAnalysisTab();
+                } catch (error) {
+                    showStatus('Грешка при четенето на файла: ' + error.message, 'error');
+                }
+            };
+            reader.readAsText(file);
         }
 
-        function parseCSV(csvContent) {
-            const lines = csvContent.trim().split('\n');
-            if (lines.length === 0) {
-                throw new Error('Файлът е празен');
-            }
-
+        function parseCSV(text) {
+            const lines = text.trim().split('\n');
             const headers = lines[0].split(',').map(h => h.trim().replace(/"/g, ''));
             const data = [];
 
             for (let i = 1; i < lines.length; i++) {
                 const values = lines[i].split(',').map(v => v.trim().replace(/"/g, ''));
-                if (values.length >= headers.length) {
-                    const record = {};
+                if (values.length === headers.length) {
+                    const row = {};
                     headers.forEach((header, index) => {
-                        record[header] = values[index] || '';
+                        row[header] = values[index];
                     });
-                    data.push(record);
+                    data.push(row);
                 }
             }
 
             return data;
         }
 
-        function enableAnalysisButtons() {
-            document.getElementById('market-basket-btn').disabled = false;
-            
-            // Update Analysis tab with basic statistics
-            updateBasicAnalysis();
+        function showStatus(message, type) {
+            fileStatus.textContent = message;
+            fileStatus.className = `status-message ${type}`;
+            fileStatus.style.display = 'block';
         }
 
-        function updateBasicAnalysis() {
-            if (!currentData || currentData.length === 0) return;
+        function updateAnalysisTab() {
+            if (csvData.length === 0) {
+                document.getElementById('analysis-results').innerHTML = `
+                    <div style="text-align: center; padding: 50px; color: #666;">
+                        Първо заредете данни за да видите статистическия анализ
+                    </div>
+                `;
+                return;
+            }
 
-            const headers = Object.keys(currentData[0]);
-            const totalRecords = currentData.length;
-            
-            // Find unique values per column
-            const columnStats = {};
-            headers.forEach(header => {
-                const uniqueValues = new Set(currentData.map(row => row[header]).filter(val => val && val.trim()));
-                columnStats[header] = uniqueValues.size;
+            const totalRows = csvData.length;
+            const columns = Object.keys(csvData[0]);
+            const columnCount = columns.length;
+
+            // Get sample of data types
+            const sampleAnalysis = columns.map(col => {
+                const sampleValues = csvData.slice(0, 10).map(row => row[col]).filter(val => val && val.trim());
+                const uniqueValues = [...new Set(sampleValues)].length;
+                return { column: col, uniqueValues, sampleSize: sampleValues.length };
             });
 
-            // Create analysis HTML
-            let analysisHTML = `
-                <div class="stats-grid">
+            document.getElementById('analysis-results').innerHTML = `
+                <div class="stat-cards">
                     <div class="stat-card">
-                        <div class="stat-number">${totalRecords}</div>
-                        <div class="stat-label">Общо записи</div>
+                        <div class="stat-number">${totalRows}</div>
+                        <div class="stat-label">Общо редове</div>
                     </div>
                     <div class="stat-card">
-                        <div class="stat-number">${headers.length}</div>
-                        <div class="stat-label">Колони в данните</div>
+                        <div class="stat-number">${columnCount}</div>
+                        <div class="stat-label">Колони</div>
+                    </div>
+                    <div class="stat-card">
+                        <div class="stat-number">${columns.join(', ')}</div>
+                        <div class="stat-label">Налични полета</div>
                     </div>
                 </div>
                 
-                <h4>📊 Статистика по колони:</h4>
-                <div class="stats-grid">
+                <div style="margin-top: 30px; padding: 20px; background: #f8f9ff; border-radius: 10px;">
+                    <h4 style="color: #333; margin-bottom: 15px;">📋 Преглед на структурата:</h4>
+                    <ul style="list-style-type: none; padding: 0;">
+                        ${sampleAnalysis.map(item => 
+                            `<li style="padding: 8px 0; border-bottom: 1px solid #eee;">
+                                <strong>${item.column}:</strong> ${item.uniqueValues} уникални стойности от ${item.sampleSize} проверени
+                            </li>`
+                        ).join('')}
+                    </ul>
+                </div>
             `;
-
-            Object.entries(columnStats).forEach(([column, uniqueCount]) => {
-                analysisHTML += `
-                    <div class="stat-card">
-                        <div class="stat-number">${uniqueCount}</div>
-                        <div class="stat-label">${column}</div>
-                    </div>
-                `;
-            });
-
-            analysisHTML += `</div>`;
-
-            document.getElementById('analysis-results').innerHTML = analysisHTML;
         }
 
         // Market Basket Analysis
         function runMarketBasketAnalysis() {
-            if (!currentData || currentData.length === 0) {
-                showStatus('error', 'Първо заредете данни!');
+            if (csvData.length === 0) {
+                alert('Първо заредете данни!');
                 return;
             }
 
-            showStatus('info', 'Извършване на Market Basket Analysis...');
-
             try {
-                // Smart column detection
-                const headers = Object.keys(currentData[0]);
-                
-                // Find ID column (transaction identifier)
-                const idColumn = findColumnName(headers, ['id', 'айди', 'transaction', 'транзакция', 'номер', 'bill', 'receipt']);
-                
-                // Find Date column
-                const dateColumn = findColumnName(headers, ['дата', 'date', 'время', 'time', 'timestamp']);
-                
-                // Find Product column
-                const productColumn = findColumnName(headers, ['продукт', 'product', 'item', 'товар', 'стока', 'артикул']);
-
-                if (!idColumn || !productColumn) {
-                    throw new Error('Не могат да бъдат открити необходимите колони. Моля, уверете се, че файлът съдържа колони за ID и Продукт.');
-                }
-
-                // Group data by transaction (ID + Date if available)
-                const transactions = new Map();
-                
-                currentData.forEach(record => {
-                    const id = record[idColumn];
-                    const date = dateColumn ? record[dateColumn] : '';
-                    const product = record[productColumn];
-                    
-                    if (!id || !product) return;
-                    
-                    const transactionKey = dateColumn ? `${id}_${date}` : id;
-                    
-                    if (!transactions.has(transactionKey)) {
-                        transactions.set(transactionKey, new Set());
-                    }
-                    
-                    transactions.get(transactionKey).add(product.trim());
-                });
-
-                // Convert to arrays for analysis
-                const transactionArrays = Array.from(transactions.values()).map(set => Array.from(set));
-                
-                // Find frequent itemsets and association rules
-                const combinations = findFrequentCombinations(transactionArrays);
-                
-                // Display results
-                displayMarketBasketResults(combinations, transactions.size, currentData.length);
-                
-                // Store for visualization
-                currentAnalysisResults = combinations;
-                
-                showStatus('success', 'Market Basket Analysis завършен успешно!');
-                
+                const results = performMarketBasketAnalysis(csvData);
+                displayMarketBasketResults(results);
             } catch (error) {
-                showStatus('error', 'Грешка при анализа: ' + error.message);
+                alert('Грешка при анализа: ' + error.message);
             }
         }
 
-        function findColumnName(headers, possibleNames) {
-            for (const name of possibleNames) {
-                const found = headers.find(h => h.toLowerCase().includes(name.toLowerCase()));
-                if (found) return found;
-            }
-            return null;
-        }
-
-        function findFrequentCombinations(transactions) {
-            const itemCounts = new Map();
-            const combinations = new Map();
+        function performMarketBasketAnalysis(data) {
+            // Group data by transaction (assuming there's an ID field or similar)
+            const transactions = new Map();
             
-            // Count individual items
-            transactions.forEach(transaction => {
-                transaction.forEach(item => {
-                    itemCounts.set(item, (itemCounts.get(item) || 0) + 1);
-                });
+            // Try to detect transaction structure
+            const firstRow = data[0];
+            const possibleIdFields = ['id', 'transaction_id', 'invoice', 'receipt', 'order_id'];
+            const possibleItemFields = ['product', 'item', 'description', 'name'];
+            
+            let idField = possibleIdFields.find(field => firstRow.hasOwnProperty(field));
+            let itemField = possibleItemFields.find(field => firstRow.hasOwnProperty(field));
+            
+            // Fallback to first two columns if not found
+            const columns = Object.keys(firstRow);
+            if (!idField) idField = columns[0];
+            if (!itemField) itemField = columns[1];
+
+            // Group items by transaction
+            data.forEach(row => {
+                const transactionId = row[idField];
+                const item = row[itemField];
+                
+                if (transactionId && item) {
+                    if (!transactions.has(transactionId)) {
+                        transactions.set(transactionId, new Set());
+                    }
+                    transactions.get(transactionId).add(item.trim());
+                }
             });
 
-            // Find 2-item combinations
-            transactions.forEach(transaction => {
-                for (let i = 0; i < transaction.length; i++) {
-                    for (let j = i + 1; j < transaction.length; j++) {
-                        const combo = [transaction[i], transaction[j]].sort().join(' + ');
+            // Find frequent item combinations
+            const combinations = new Map();
+            const transactionList = Array.from(transactions.values());
+
+            // Generate all possible combinations of 2 items
+            transactionList.forEach(transaction => {
+                const items = Array.from(transaction);
+                for (let i = 0; i < items.length; i++) {
+                    for (let j = i + 1; j < items.length; j++) {
+                        const combo = [items[i], items[j]].sort().join(' + ');
                         combinations.set(combo, (combinations.get(combo) || 0) + 1);
                     }
                 }
             });
 
-            // Convert to sorted array
-            return Array.from(combinations.entries())
+            // Sort combinations by frequency
+            const sortedCombinations = Array.from(combinations.entries())
                 .sort((a, b) => b[1] - a[1])
-                .slice(0, 10); // Top 10 combinations
+                .slice(0, 10); // Top 10
+
+            return {
+                totalTransactions: transactions.size,
+                totalItems: data.length,
+                uniqueItems: new Set(data.map(row => row[itemField])).size,
+                combinations: sortedCombinations,
+                idField: idField,
+                itemField: itemField
+            };
         }
 
-        function displayMarketBasketResults(combinations, totalTransactions, totalRecords) {
-            const resultsDiv = document.getElementById('basket-results');
-            const statsDiv = document.getElementById('basket-stats');
-            const combinationsDiv = document.getElementById('basket-combinations');
-
-            // Statistics
-            const uniqueProducts = new Set();
-            combinations.forEach(([combo, count]) => {
-                const [product1, product2] = combo.split(' + ');
-                uniqueProducts.add(product1);
-                uniqueProducts.add(product2);
-            });
-
+        function displayMarketBasketResults(results) {
+            const resultsDiv = document.getElementById('market-basket-results');
+            const combinationsDiv = document.getElementById('combinations-display');
+            
+            const { totalTransactions, totalItems, uniqueItems, combinations } = results;
             const avgSupport = combinations.length > 0 ? 
                 (combinations.reduce((sum, [combo, count]) => sum + count, 0) / combinations.length).toFixed(1) : 0;
 
-            statsDiv.innerHTML = `
-                <div class="stats-grid">
+            // Analysis statistics with improved styling
+            combinationsDiv.innerHTML = `
+                <div class="stat-cards">
                     <div class="stat-card">
                         <div class="stat-number">${totalTransactions}</div>
-                        <div class="stat-label">Общо транзакции</div>
+                        <div class="stat-label">Транзакции</div>
                     </div>
                     <div class="stat-card">
-                        <div class="stat-number">${totalRecords}</div>
-                        <div class="stat-label">Общо записи в данните</div>
-                    </div>
-                    <div class="stat-card">
-                        <div class="stat-number">${uniqueProducts.size}</div>
+                        <div class="stat-number">${uniqueItems}</div>
                         <div class="stat-label">Уникални продукти</div>
-                    </div>
-                    <div class="stat-card">
-                        <div class="stat-number">${combinations.length}</div>
-                        <div class="stat-label">Открити комбинации</div>
                     </div>
                     <div class="stat-card">
                         <div class="stat-number">${avgSupport}</div>
@@ -905,15 +1016,42 @@
                 </div>
             `;
 
-            // Top combinations
-            let combinationsHTML = '<h4>🔝 Топ комбинации от продукти:</h4><ul>';
-            combinations.forEach(([combo, count], index) => {
+            // Top combinations with circular progress bars
+            let combinationsHTML = `
+                <div class="combinations-header">
+                    <h4>🔝 Топ комбинации от продукти</h4>
+                    <p>Визуализация на най-популярните комбинации с кръгови диаграми</p>
+                </div>
+                <div class="combinations-grid">
+            `;
+            
+            const maxCount = Math.max(...combinations.map(([combo, count]) => count));
+            const colors = ['#667eea', '#764ba2', '#f093fb', '#f5576c', '#4facfe', '#00f2fe'];
+            
+            combinations.slice(0, 6).forEach(([combo, count], index) => {
                 const confidence = ((count / totalTransactions) * 100).toFixed(1);
-                combinationsHTML += `<li><strong>${combo}</strong> - ${count} пъти (${confidence}% доверие)</li>`;
+                const percentage = Math.round((count / maxCount) * 100);
+                const color = colors[index % colors.length];
+                
+                combinationsHTML += `
+                    <div class="combination-card">
+                        <div class="circular-progress">
+                            <div class="progress-circle" style="--progress-color: ${color}; --progress-percent: ${percentage}%;">
+                                <div class="progress-text">${count}</div>
+                            </div>
+                        </div>
+                        <div class="combination-title">${combo}</div>
+                        <div class="combination-stats">
+                            ${confidence}% доверие<br>
+                            ${count} пъти в данните
+                        </div>
+                    </div>
+                `;
             });
-            combinationsHTML += '</ul>';
+            
+            combinationsHTML += '</div>';
 
-            combinationsDiv.innerHTML = combinationsHTML;
+            combinationsDiv.innerHTML += combinationsHTML;
             resultsDiv.style.display = 'block';
 
             // Create visualizations
@@ -928,185 +1066,121 @@
 
             // Create Simple Bar Chart
             createSimpleBarChart(combinations);
-            
+
             // Create Network Diagram
-            createSimpleNetworkDiagram(combinations);
+            createNetworkDiagram(combinations);
         }
 
         function createSimpleBarChart(combinations) {
-            const chartContainer = document.getElementById('simpleBarChart');
-            chartContainer.innerHTML = '';
-
-            if (combinations.length === 0) {
-                chartContainer.innerHTML = '<div style="text-align: center; width: 100%; padding: 50px; color: #666;">Няма данни за показване</div>';
-                return;
-            }
-
-            const maxCount = Math.max(...combinations.map(([combo, count]) => count));
-            const chartData = combinations.slice(0, 6); // Top 6 for better display
-
-            // Create colorful bars with different colors
-            const colors = [
-                '#667eea', '#764ba2', '#4ecdc4', '#45b7d1', '#f9ca24', '#eb4d4b'
-            ];
-
-            chartData.forEach(([combo, count], index) => {
-                const bar = document.createElement('div');
-                bar.className = 'bar';
-                const height = (count / maxCount) * 150; // Max height 150px
-                bar.style.height = height + 'px';
-                bar.style.background = `linear-gradient(135deg, ${colors[index % colors.length]}, ${colors[(index + 1) % colors.length]})`;
+            const container = document.getElementById('simpleBarChart');
+            const maxValue = Math.max(...combinations.map(([combo, count]) => count));
+            const colors = ['#667eea', '#764ba2', '#f093fb', '#f5576c', '#4facfe', '#00f2fe', '#a8e6cf', '#ffd93d'];
+            
+            let html = '';
+            combinations.slice(0, 8).forEach(([combo, count], index) => {
+                const percentage = (count / maxValue) * 100;
+                const color = colors[index % colors.length];
                 
-                const label = document.createElement('div');
-                label.className = 'bar-label';
-                label.textContent = combo.length > 20 ? combo.substring(0, 17) + '...' : combo;
-                
-                const value = document.createElement('div');
-                value.className = 'bar-value';
-                value.textContent = count;
-                value.style.color = colors[index % colors.length];
-                value.style.fontWeight = 'bold';
-                
-                bar.appendChild(label);
-                bar.appendChild(value);
-                chartContainer.appendChild(bar);
+                html += `
+                    <div class="bar-item" style="--bar-color: ${color}">
+                        <div class="bar-label">${combo}</div>
+                        <div class="bar-fill">
+                            <div class="bar-progress" style="width: ${percentage}%; background: ${color}"></div>
+                        </div>
+                        <div class="bar-value">${count}</div>
+                    </div>
+                `;
             });
+            
+            container.innerHTML = html;
         }
 
-        function createSimpleNetworkDiagram(combinations) {
-            const networkContainer = document.getElementById('networkDiagram');
-            networkContainer.innerHTML = '';
+        function createNetworkDiagram(combinations) {
+            const container = document.getElementById('networkDiagram');
+            container.innerHTML = '<canvas id="networkCanvas" class="network-canvas"></canvas>';
+            
+            const canvas = document.getElementById('networkCanvas');
+            const ctx = canvas.getContext('2d');
+            
+            // Set canvas size
+            canvas.width = container.clientWidth;
+            canvas.height = container.clientHeight;
 
-            if (combinations.length === 0) {
-                networkContainer.innerHTML = '<div style="text-align: center; padding-top: 150px; color: #666;">Няма комбинации за показване</div>';
-                return;
-            }
+            renderNetworkDiagram(ctx, combinations, canvas.width, canvas.height);
+        }
 
-            const products = new Set();
-            const connections = new Map();
-
+        function renderNetworkDiagram(ctx, combinations, width, height) {
+            ctx.clearRect(0, 0, width, height);
+            
+            // Extract unique items and create nodes
+            const items = new Set();
+            const links = [];
+            
             combinations.forEach(([combo, count]) => {
-                const [product1, product2] = combo.split(' + ');
-                products.add(product1);
-                products.add(product2);
+                const [item1, item2] = combo.split(' + ');
+                items.add(item1);
+                items.add(item2);
+                links.push({ source: item1, target: item2, support: count });
+            });
+            
+            const nodes = Array.from(items).map((item, index) => ({
+                id: item,
+                x: Math.random() * (width - 100) + 50,
+                y: Math.random() * (height - 100) + 50,
+                index: index
+            }));
+
+            // Color function based on support strength
+            function getColorForSupport(support) {
+                if (support >= 11) return '#ab47bc'; // Purple - strongest
+                if (support >= 9) return '#42a5f5';  // Blue - very strong
+                if (support >= 7) return '#66bb6a';  // Green - strong  
+                if (support >= 5) return '#ffeb3b';  // Yellow - good
+                if (support >= 3) return '#ffa726';  // Orange - moderate
+                return '#ff6b6b';                    // Red - weak
+            }
+
+            // Draw links
+            links.forEach(link => {
+                const sourceNode = nodes.find(n => n.id === link.source);
+                const targetNode = nodes.find(n => n.id === link.target);
                 
-                const key = [product1, product2].sort().join('-');
-                connections.set(key, count);
+                if (sourceNode && targetNode) {
+                    ctx.beginPath();
+                    ctx.moveTo(sourceNode.x, sourceNode.y);
+                    ctx.lineTo(targetNode.x, targetNode.y);
+                    ctx.strokeStyle = getColorForSupport(link.support);
+                    ctx.lineWidth = Math.max(2, Math.min(8, link.support / 2));
+                    ctx.stroke();
+                }
             });
 
-            const productArray = Array.from(products);
-            
-            setTimeout(() => {
-                const containerWidth = networkContainer.offsetWidth || 500;
-                const containerHeight = networkContainer.offsetHeight || 400;
-
-                const margin = 50;
-                const centerX = containerWidth / 2;
-                const centerY = containerHeight / 2;
-                const radius = Math.min(containerWidth - margin * 2, containerHeight - margin * 2) * 0.35;
-
-                // Create nodes
-                productArray.forEach((product, index) => {
-                    const angle = (index / productArray.length) * 2 * Math.PI;
-                    const x = centerX + radius * Math.cos(angle) - 60;
-                    const y = centerY + radius * Math.sin(angle) - 15;
-
-                    const node = document.createElement('div');
-                    node.className = 'network-node';
-                    node.textContent = product.length > 15 ? product.substring(0, 12) + '...' : product;
-                    node.style.left = Math.max(5, Math.min(containerWidth - 125, x)) + 'px';
-                    node.style.top = Math.max(5, Math.min(containerHeight - 35, y)) + 'px';
-                    node.setAttribute('data-product', product);
-                    node.title = product;
-                    
-                    networkContainer.appendChild(node);
-                });
-
-                // Create connections
-                setTimeout(() => {
-                    // Improved color distribution algorithm
-                    const countValues = Array.from(connections.values()).sort((a, b) => b - a);
-                    const maxCount = countValues[0] || 1;
-                    const minCount = countValues[countValues.length - 1] || 1;
-                    
-                    connections.forEach((count, key) => {
-                        const [product1, product2] = key.split('-');
-                        const node1 = networkContainer.querySelector(`[data-product="${product1}"]`);
-                        const node2 = networkContainer.querySelector(`[data-product="${product2}"]`);
-
-                        if (node1 && node2) {
-                            const rect1 = node1.getBoundingClientRect();
-                            const rect2 = node2.getBoundingClientRect();
-                            const containerRect = networkContainer.getBoundingClientRect();
-
-                            const x1 = rect1.left - containerRect.left + rect1.width / 2;
-                            const y1 = rect1.top - containerRect.top + rect1.height / 2;
-                            const x2 = rect2.left - containerRect.left + rect2.width / 2;
-                            const y2 = rect2.top - containerRect.top + rect2.height / 2;
-
-                            const length = Math.sqrt((x2 - x1) ** 2 + (y2 - y1) ** 2);
-                            const angle = Math.atan2(y2 - y1, x2 - x1) * 180 / Math.PI;
-
-                            // Better strength distribution based on actual count ranges
-                            let strengthLevel;
-                            if (maxCount === minCount) {
-                                strengthLevel = 3; // All same, use middle
-                            } else {
-                                const normalized = (count - minCount) / (maxCount - minCount);
-                                strengthLevel = Math.ceil(normalized * 6) || 1;
-                            }
-
-                            const line = document.createElement('div');
-                            line.className = `network-line strength-${strengthLevel}`;
-                            line.style.width = length + 'px';
-                            line.style.height = Math.max(3, Math.min(8, strengthLevel + 1)) + 'px';
-                            line.style.left = x1 + 'px';
-                            line.style.top = y1 + 'px';
-                            line.style.transform = `rotate(${angle}deg)`;
-                            line.style.opacity = Math.min(0.9, 0.5 + (strengthLevel / 6) * 0.4);
-                            line.title = `${product1} + ${product2}: ${count} пъти (сила: ${strengthLevel}/6)`;
-
-                            networkContainer.appendChild(line);
-                        }
-                    });
-                }, 100);
-            }, 200);
+            // Draw nodes
+            nodes.forEach(node => {
+                // Node circle
+                ctx.beginPath();
+                ctx.arc(node.x, node.y, 25, 0, 2 * Math.PI);
+                ctx.fillStyle = '#ffffff';
+                ctx.fill();
+                ctx.strokeStyle = '#667eea';
+                ctx.lineWidth = 3;
+                ctx.stroke();
+                
+                // Node label
+                ctx.fillStyle = '#333';
+                ctx.font = '12px Arial';
+                ctx.textAlign = 'center';
+                ctx.textBaseline = 'middle';
+                
+                // Truncate long text
+                let text = node.id;
+                if (text.length > 10) {
+                    text = text.substring(0, 10) + '...';
+                }
+                
+                ctx.fillText(text, node.x, node.y);
+            });
         }
-
-        function showTab(tabName) {
-            // Hide all tab contents
-            document.querySelectorAll('.tab-content').forEach(tab => tab.classList.remove('active'));
-            document.querySelectorAll('.tab-btn').forEach(btn => btn.classList.remove('active'));
-            
-            // Show selected tab
-            document.getElementById(tabName + '-tab').classList.add('active');
-            event.target.classList.add('active');
-            
-            // Refresh network diagram if switching to visualization tab
-            if (tabName === 'visualization' && currentAnalysisResults) {
-                setTimeout(() => createSimpleNetworkDiagram(currentAnalysisResults), 300);
-            }
-        }
-
-        function showStatus(type, message) {
-            const statusDiv = document.getElementById('file-status');
-            statusDiv.className = `status-message status-${type}`;
-            statusDiv.textContent = message;
-            statusDiv.style.display = 'block';
-            
-            if (type === 'success' || type === 'info') {
-                setTimeout(() => {
-                    statusDiv.style.display = 'none';
-                }, 3000);
-            }
-        }
-
-        // Initialize the application
-        document.addEventListener('DOMContentLoaded', function() {
-            console.log('BI App Loading...');
-            setupFileHandling();
-            console.log('BI App Ready!');
-        });
     </script>
 </body>
 </html>
