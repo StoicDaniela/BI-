@@ -4,6 +4,7 @@
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>BI Система за Анализ</title>
+    <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
     <style>
         * {
             margin: 0;
@@ -296,6 +297,69 @@
             color: #0c5460;
             border: 1px solid #bee5eb;
         }
+
+        /* Chart specific styles */
+        .chart-container {
+            position: relative;
+            height: 400px;
+            margin: 20px 0;
+            padding: 20px;
+            background: #f8f9fa;
+            border-radius: 8px;
+        }
+
+        .chart-title {
+            text-align: center;
+            font-size: 18px;
+            font-weight: bold;
+            margin-bottom: 15px;
+            color: #333;
+        }
+
+        .charts-grid {
+            display: grid;
+            grid-template-columns: 1fr;
+            gap: 20px;
+        }
+
+        @media (min-width: 1200px) {
+            .charts-grid {
+                grid-template-columns: 1fr 1fr;
+            }
+        }
+
+        .network-container {
+            height: 500px;
+            border: 1px solid #ddd;
+            border-radius: 8px;
+            position: relative;
+            overflow: hidden;
+        }
+
+        .network-node {
+            position: absolute;
+            background: #667eea;
+            color: white;
+            padding: 8px 12px;
+            border-radius: 20px;
+            font-size: 12px;
+            font-weight: bold;
+            cursor: pointer;
+            transition: all 0.3s;
+            box-shadow: 0 2px 5px rgba(0,0,0,0.2);
+        }
+
+        .network-node:hover {
+            background: #764ba2;
+            transform: scale(1.1);
+        }
+
+        .network-line {
+            position: absolute;
+            background: #333;
+            transform-origin: left center;
+            opacity: 0.3;
+        }
     </style>
 </head>
 <body>
@@ -387,8 +451,29 @@
 
                     <div id="visualization-tab" class="tab-content">
                         <h4>Графична визуализация:</h4>
-                        <div id="visualization-content">
-                            <p>Графичната визуализация ще бъде добавена в следваща версия.</p>
+                        
+                        <div class="charts-grid">
+                            <!-- Bar Chart for Top Combinations -->
+                            <div class="chart-container">
+                                <div class="chart-title">📊 Топ Комбинации</div>
+                                <canvas id="combinationsChart"></canvas>
+                            </div>
+
+                            <!-- Pie Chart for Product Distribution -->
+                            <div class="chart-container">
+                                <div class="chart-title">🥧 Разпределение на Продукти</div>
+                                <canvas id="productsChart"></canvas>
+                            </div>
+                        </div>
+
+                        <!-- Network Diagram -->
+                        <div class="chart-container">
+                            <div class="chart-title">🕸️ Мрежова Диаграма на Връзки</div>
+                            <div id="networkDiagram" class="network-container">
+                                <div style="text-align: center; padding-top: 200px; color: #666;">
+                                    Мрежовата диаграма ще се покаже след анализ...
+                                </div>
+                            </div>
                         </div>
                     </div>
                 </div>
@@ -624,6 +709,10 @@
             displayResults(sortedCombinations, transactionList, { dateCol, idCol, productCol });
         }
 
+        // Global variables for charts
+        let combinationsChart = null;
+        let productsChart = null;
+
         function displayResults(combinations, transactions, columnInfo) {
             document.getElementById('analysis-results').style.display = 'block';
             
@@ -666,6 +755,227 @@
                 <p>• ID/Бон: "${columnInfo.idCol || 'няма - използвано групиране'}"</p>
                 <p>• Продукт: "${columnInfo.productCol}"</p>
             `;
+
+            // Create visualizations
+            createCharts(combinations, transactions, columnInfo);
+        }
+
+        function createCharts(combinations, transactions, columnInfo) {
+            // Destroy existing charts if they exist
+            if (combinationsChart) {
+                combinationsChart.destroy();
+            }
+            if (productsChart) {
+                productsChart.destroy();
+            }
+
+            // Create Bar Chart for Top Combinations
+            createCombinationsChart(combinations);
+            
+            // Create Pie Chart for Product Distribution
+            createProductsChart(columnInfo);
+            
+            // Create Network Diagram
+            createNetworkDiagram(combinations);
+        }
+
+        function createCombinationsChart(combinations) {
+            const ctx = document.getElementById('combinationsChart').getContext('2d');
+            
+            const topCombinations = combinations.slice(0, 8); // Top 8 combinations
+            const labels = topCombinations.map(([combo, count]) => combo);
+            const data = topCombinations.map(([combo, count]) => count);
+            
+            combinationsChart = new Chart(ctx, {
+                type: 'bar',
+                data: {
+                    labels: labels,
+                    datasets: [{
+                        label: 'Честота на комбинации',
+                        data: data,
+                        backgroundColor: [
+                            '#667eea', '#764ba2', '#f093fb', '#f5576c',
+                            '#4facfe', '#00f2fe', '#43e97b', '#38f9d7'
+                        ],
+                        borderColor: '#333',
+                        borderWidth: 1,
+                        borderRadius: 5
+                    }]
+                },
+                options: {
+                    responsive: true,
+                    maintainAspectRatio: false,
+                    plugins: {
+                        legend: {
+                            display: false
+                        },
+                        tooltip: {
+                            callbacks: {
+                                label: function(context) {
+                                    return `Честота: ${context.parsed.y} пъти`;
+                                }
+                            }
+                        }
+                    },
+                    scales: {
+                        y: {
+                            beginAtZero: true,
+                            title: {
+                                display: true,
+                                text: 'Брой появявания'
+                            }
+                        },
+                        x: {
+                            title: {
+                                display: true,
+                                text: 'Комбинации от продукти'
+                            },
+                            ticks: {
+                                maxRotation: 45,
+                                minRotation: 45
+                            }
+                        }
+                    }
+                }
+            });
+        }
+
+        function createProductsChart(columnInfo) {
+            const ctx = document.getElementById('productsChart').getContext('2d');
+            
+            // Count product frequency
+            const productCounts = {};
+            analysisData.forEach(row => {
+                const product = row[columnInfo.productCol];
+                if (product) {
+                    productCounts[product] = (productCounts[product] || 0) + 1;
+                }
+            });
+
+            const sortedProducts = Object.entries(productCounts)
+                .sort((a, b) => b[1] - a[1])
+                .slice(0, 8); // Top 8 products
+
+            const labels = sortedProducts.map(([product, count]) => product);
+            const data = sortedProducts.map(([product, count]) => count);
+            
+            productsChart = new Chart(ctx, {
+                type: 'pie',
+                data: {
+                    labels: labels,
+                    datasets: [{
+                        data: data,
+                        backgroundColor: [
+                            '#FF6384', '#36A2EB', '#FFCE56', '#4BC0C0',
+                            '#9966FF', '#FF9F40', '#FF6384', '#C9CBCF'
+                        ],
+                        borderColor: '#fff',
+                        borderWidth: 2
+                    }]
+                },
+                options: {
+                    responsive: true,
+                    maintainAspectRatio: false,
+                    plugins: {
+                        legend: {
+                            position: 'bottom',
+                            labels: {
+                                padding: 20,
+                                usePointStyle: true
+                            }
+                        },
+                        tooltip: {
+                            callbacks: {
+                                label: function(context) {
+                                    const percentage = ((context.parsed / data.reduce((a, b) => a + b, 0)) * 100).toFixed(1);
+                                    return `${context.label}: ${context.parsed} пъти (${percentage}%)`;
+                                }
+                            }
+                        }
+                    }
+                }
+            });
+        }
+
+        function createNetworkDiagram(combinations) {
+            const networkContainer = document.getElementById('networkDiagram');
+            networkContainer.innerHTML = ''; // Clear existing content
+
+            if (combinations.length === 0) {
+                networkContainer.innerHTML = '<div style="text-align: center; padding-top: 200px; color: #666;">Няма комбинации за показване в мрежовата диаграма</div>';
+                return;
+            }
+
+            // Extract unique products from combinations
+            const products = new Set();
+            const connections = new Map();
+
+            combinations.forEach(([combo, count]) => {
+                const [product1, product2] = combo.split(' + ');
+                products.add(product1);
+                products.add(product2);
+                
+                const key = [product1, product2].sort().join('-');
+                connections.set(key, count);
+            });
+
+            const productArray = Array.from(products);
+            const containerWidth = networkContainer.offsetWidth;
+            const containerHeight = networkContainer.offsetHeight;
+
+            // Position products in a circle
+            const centerX = containerWidth / 2;
+            const centerY = containerHeight / 2;
+            const radius = Math.min(containerWidth, containerHeight) * 0.3;
+
+            // Create nodes
+            productArray.forEach((product, index) => {
+                const angle = (index / productArray.length) * 2 * Math.PI;
+                const x = centerX + radius * Math.cos(angle) - 50; // -50 for node width
+                const y = centerY + radius * Math.sin(angle) - 15; // -15 for node height
+
+                const node = document.createElement('div');
+                node.className = 'network-node';
+                node.textContent = product;
+                node.style.left = x + 'px';
+                node.style.top = y + 'px';
+                node.setAttribute('data-product', product);
+                
+                networkContainer.appendChild(node);
+            });
+
+            // Create connections (lines)
+            connections.forEach((count, key) => {
+                const [product1, product2] = key.split('-');
+                const node1 = networkContainer.querySelector(`[data-product="${product1}"]`);
+                const node2 = networkContainer.querySelector(`[data-product="${product2}"]`);
+
+                if (node1 && node2) {
+                    const rect1 = node1.getBoundingClientRect();
+                    const rect2 = node2.getBoundingClientRect();
+                    const containerRect = networkContainer.getBoundingClientRect();
+
+                    const x1 = rect1.left - containerRect.left + rect1.width / 2;
+                    const y1 = rect1.top - containerRect.top + rect1.height / 2;
+                    const x2 = rect2.left - containerRect.left + rect2.width / 2;
+                    const y2 = rect2.top - containerRect.top + rect2.height / 2;
+
+                    const length = Math.sqrt((x2 - x1) ** 2 + (y2 - y1) ** 2);
+                    const angle = Math.atan2(y2 - y1, x2 - x1) * 180 / Math.PI;
+
+                    const line = document.createElement('div');
+                    line.className = 'network-line';
+                    line.style.width = length + 'px';
+                    line.style.height = Math.max(2, Math.min(8, count)) + 'px'; // Line thickness based on frequency
+                    line.style.left = x1 + 'px';
+                    line.style.top = y1 + 'px';
+                    line.style.transform = `rotate(${angle}deg)`;
+                    line.style.opacity = Math.min(0.8, count / 10); // Opacity based on frequency
+                    line.title = `${product1} + ${product2}: ${count} пъти`;
+
+                    networkContainer.appendChild(line);
+                }
+            });
         }
 
         function showTab(tabName) {
